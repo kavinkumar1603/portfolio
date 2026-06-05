@@ -744,6 +744,33 @@ body {
   justify-content: center;
 }
 
+.prj-header {
+  margin-bottom: 40px;
+}
+
+.prj-super {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--grey-lt);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.prj-section-title {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: clamp(3.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  color: var(--text-1);
+  background: linear-gradient(135deg, #ffffff 0%, #a8a8a8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .prj-list {
   display: flex;
   flex-direction: column;
@@ -918,6 +945,28 @@ body {
   .prj-left { padding: 0; }
   .prj-item-btn { padding: 16px 0; }
   .prj-name-huge { font-size: 2.5rem; }
-  .prj-right { padding-left: 0; margin-top: 40px; }
   .prj-sticky { position: static; }
+}
+
+/* ================================================
+   LENIS SMOOTH SCROLL REQUIRED CSS
+   ================================================ */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }

@@ -48,6 +48,10 @@ export default function ProjectsSection() {
         
         {/* ── Left Side: List of Names ── */}
         <div className="prj-left">
+          <div className="prj-header">
+            <span className="prj-super">Recent Work</span>
+            <h2 className="prj-section-title">Projects</h2>
+          </div>
           <div className="prj-list">
             {projects.map((project, index) => {
               const isActive = activeIndex === index;
