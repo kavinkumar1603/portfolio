@@ -1,10 +1,12 @@
 import HeroSection from "./components/HeroSection";
+import TechStack from "./components/TechStack";
 
 export default function Home() {
   return (
     <>
       <main>
         <HeroSection />
+        <TechStack />
       </main>
 
       <footer className="footer">
