@@ -1,5 +1,6 @@
 import HeroSection from "./components/HeroSection";
 import TechStack from "./components/TechStack";
+import ProjectsSection from "./components/ProjectsSection";
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <TechStack />
+        <ProjectsSection />
       </main>
 
       <footer className="footer">
