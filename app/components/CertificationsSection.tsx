@@ -7,7 +7,6 @@ const certifications = [
   {
     id: 'dsa',
     provider: 'Udemy',
-    initials: 'U',
     name: 'Mastering Data Structures & Algorithms using C and C++',
     date: 'May 2025',
     image: '/DSA.png',
@@ -16,7 +15,6 @@ const certifications = [
   {
     id: 'react',
     provider: 'Udemy',
-    initials: 'U',
     name: 'React JS Masterclass: Zero To Job Ready With 10 Projects',
     date: 'May 2025',
     image: '/react.png',
@@ -25,7 +23,6 @@ const certifications = [
   {
     id: 'java-best',
     provider: 'Udemy',
-    initials: 'U',
     name: 'Java Best Practices for Efficient, Scalable, and Secure Code',
     date: 'Sept 2025',
     image: '/java.png',
@@ -34,7 +31,6 @@ const certifications = [
   {
     id: 'sql',
     provider: 'HackerRank',
-    initials: 'HR',
     name: 'SQL (Advanced)',
     date: 'Nov 2025',
     image: '/SqlAdvanced.png',
@@ -43,7 +39,6 @@ const certifications = [
   {
     id: 'java-complete',
     provider: 'Udemy',
-    initials: 'U',
     name: 'The Complete Java Programmer: From Scratch to Advanced',
     date: 'Aug 2025',
     image: '/JAVA1.png',
@@ -52,7 +47,6 @@ const certifications = [
   {
     id: 'node',
     provider: 'Udemy',
-    initials: 'U',
     name: 'Node.js, Express, MongoDB & More: The Complete Bootcamp',
     date: 'Feb 2026',
     image: '/Node.png',
@@ -61,7 +55,6 @@ const certifications = [
   {
     id: 'nptel',
     provider: 'NPTEL',
-    initials: 'NP',
     name: 'Design Thinking — A Primer',
     date: 'Jan–Feb 2026',
     image: '/nptel.png',
@@ -108,6 +101,8 @@ export default function CertificationsSection() {
           >
             {/* Narrow strip — always visible */}
             <div className="cert-strip">
+              <span className="cert-strip-index">0{index + 1}</span>
+              <div className="cert-strip-line"></div>
               <span className="cert-strip-label">{cert.provider}</span>
             </div>
 
@@ -121,24 +116,25 @@ export default function CertificationsSection() {
                   alt={cert.name}
                   className="cert-img"
                 />
-                {/* Gradient overlay for readability */}
+                {/* Dark gradient for overlay contrast */}
                 <div className="cert-img-overlay" />
               </div>
 
               {/* Info bar at bottom */}
               <div className="cert-info-bar">
-                <div className="cert-info-left">
-                  <span className="cert-exp-provider">{cert.provider}</span>
+                <div className="cert-info-content">
+                  <div className="cert-exp-meta">
+                    <span className="cert-exp-provider">{cert.provider}</span>
+                    <span className="cert-exp-dot">•</span>
+                    <span className="cert-exp-date">{cert.date}</span>
+                  </div>
                   <h3 className="cert-exp-name">{cert.name}</h3>
                 </div>
-                <div className="cert-info-right">
-                  <span className="cert-exp-date">{cert.date}</span>
-                  <span className="cert-exp-cta">
-                    View Credential
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
-                  </span>
+                
+                <div className="cert-exp-cta-circle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
                 </div>
               </div>
             </div>
