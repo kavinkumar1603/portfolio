@@ -5,27 +5,66 @@ import { useEffect, useRef } from 'react';
 
 const certifications = [
   {
-    id: 'udemy',
+    id: 'dsa',
     provider: 'Udemy',
-    icon: '🎓',
-    name: 'The Complete Web Development Bootcamp',
-    date: 'Jan 2024',
+    initials: 'U',
+    name: 'Mastering Data Structures & Algorithms using C and C++',
+    date: 'May 2025',
+    image: '/DSA.png',
+    link: 'https://ude.my/UC-66dfed77-b531-4073-bcbd-aefe47a70741'
+  },
+  {
+    id: 'react',
+    provider: 'Udemy',
+    initials: 'U',
+    name: 'React JS Masterclass: Zero To Job Ready With 10 Projects',
+    date: 'May 2025',
+    image: '/react.png',
+    link: 'https://ude.my/UC-e4b481fa-253d-410f-aede-9da2ef76bc9b'
+  },
+  {
+    id: 'java-best',
+    provider: 'Udemy',
+    initials: 'U',
+    name: 'Java Best Practices for Efficient, Scalable, and Secure Code',
+    date: 'Sept 2025',
+    image: '/java.png',
+    link: 'https://ude.my/UC-21a3c2ec-0c33-49f9-babc-992ca91f95da'
+  },
+  {
+    id: 'sql',
+    provider: 'HackerRank',
+    initials: 'HR',
+    name: 'SQL (Advanced)',
+    date: 'Nov 2025',
+    image: '/SqlAdvanced.png',
     link: '#'
+  },
+  {
+    id: 'java-complete',
+    provider: 'Udemy',
+    initials: 'U',
+    name: 'The Complete Java Programmer: From Scratch to Advanced',
+    date: 'Aug 2025',
+    image: '/JAVA1.png',
+    link: 'https://ude.my/UC-ebba8300-8d63-4812-a0a0-72cdbc7cb421'
+  },
+  {
+    id: 'node',
+    provider: 'Udemy',
+    initials: 'U',
+    name: 'Node.js, Express, MongoDB & More: The Complete Bootcamp',
+    date: 'Feb 2026',
+    image: '/Node.png',
+    link: 'https://ude.my/UC-4d68dd0f-070d-423b-bda3-c91f73683d49'
   },
   {
     id: 'nptel',
     provider: 'NPTEL',
-    icon: '📜',
-    name: 'Joy of Computing using Python',
-    date: 'Jul 2023',
-    link: '#'
-  },
-  {
-    id: 'hackerrank',
-    provider: 'HackerRank',
-    icon: '💻',
-    name: 'Problem Solving (Basic)',
-    date: 'Mar 2023',
+    initials: 'NP',
+    name: 'Design Thinking — A Primer',
+    date: 'Jan–Feb 2026',
+    image: '/nptel.png',
     link: '#'
   }
 ];
@@ -57,30 +96,53 @@ export default function CertificationsSection() {
         <h2 className="cert-title-text">Certifications</h2>
       </div>
 
-      <div className="cert-timeline">
+      <div className="cert-accordion reveal reveal-delay-1">
         {certifications.map((cert, index) => (
-          <div key={cert.id} className={`cert-item reveal reveal-delay-${index + 1}`}>
-            <div className="cert-dot" />
-            
-            <a href={cert.link} target="_blank" rel="noreferrer" className="cert-card">
-              <div className="cert-card-top">
-                <div className="cert-icon">{cert.icon}</div>
+          <a
+            key={cert.id}
+            href={cert.link}
+            target="_blank"
+            rel="noreferrer"
+            className="cert-card"
+            style={{ '--card-index': index } as React.CSSProperties}
+          >
+            {/* Narrow strip — always visible */}
+            <div className="cert-strip">
+              <span className="cert-strip-label">{cert.provider}</span>
+            </div>
+
+            {/* Full certificate image + info revealed on expand */}
+            <div className="cert-expanded">
+              {/* Actual certificate image */}
+              <div className="cert-img-wrapper">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={cert.image}
+                  alt={cert.name}
+                  className="cert-img"
+                />
+                {/* Gradient overlay for readability */}
+                <div className="cert-img-overlay" />
               </div>
 
-              <span className="cert-provider">{cert.provider}</span>
-              <h3 className="cert-name">{cert.name}</h3>
-
-              <div className="cert-bottom">
-                <span className="cert-date">{cert.date}</span>
-                <span className="cert-link-text">
-                  View Credential
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </span>
+              {/* Info bar at bottom */}
+              <div className="cert-info-bar">
+                <div className="cert-info-left">
+                  <span className="cert-exp-provider">{cert.provider}</span>
+                  <h3 className="cert-exp-name">{cert.name}</h3>
+                </div>
+                <div className="cert-info-right">
+                  <span className="cert-exp-date">{cert.date}</span>
+                  <span className="cert-exp-cta">
+                    View Credential
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </div>
               </div>
-            </a>
-          </div>
+            </div>
+          </a>
         ))}
       </div>
     </section>
