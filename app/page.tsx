@@ -1,6 +1,7 @@
 import HeroSection from "./components/HeroSection";
 import TechStack from "./components/TechStack";
 import ProjectsSection from "./components/ProjectsSection";
+import InternshipsSection from "./components/InternshipsSection";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
         <HeroSection />
         <TechStack />
         <ProjectsSection />
+        <InternshipsSection />
       </main>
 
       <footer className="footer">
