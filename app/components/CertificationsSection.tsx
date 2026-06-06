@@ -90,48 +90,33 @@ export default function CertificationsSection() {
       </div>
 
       <div className="cert-accordion reveal reveal-delay-1">
-        {certifications.map((cert, index) => (
+        {certifications.map((cert) => (
           <a
             key={cert.id}
             href={cert.link}
             target="_blank"
             rel="noreferrer"
             className="cert-card"
-            style={{ '--card-index': index } as React.CSSProperties}
           >
-            {/* Narrow strip — extremely minimal */}
-            <div className="cert-strip">
-              <span className="cert-strip-label">{cert.provider}</span>
+            {/* Background Image ALWAYS visible */}
+            <div className="cert-bg">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={cert.image} alt={cert.name} className="cert-img" />
+              <div className="cert-overlay"></div>
             </div>
 
-            {/* Full certificate revealed on expand */}
-            <div className="cert-expanded">
-              {/* Image Box - Clean & Full Color */}
-              <div className="cert-img-wrapper">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={cert.image}
-                  alt={cert.name}
-                  className="cert-img"
-                />
-              </div>
+            {/* Collapsed State: Vertical Text */}
+            <div className="cert-collapsed-content">
+              <span className="cert-vertical-title">{cert.provider}</span>
+            </div>
 
-              {/* Info Box - Solid Block, Clean Typography */}
-              <div className="cert-info-solid">
-                <div className="cert-info-top">
-                  <span className="cert-info-provider">{cert.provider}</span>
-                  <span className="cert-info-date">{cert.date}</span>
-                </div>
-                
-                <h3 className="cert-info-name">{cert.name}</h3>
-                
-                <div className="cert-info-link">
-                  View Certificate
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </div>
+            {/* Expanded State: Horizontal Info (Fades in on hover) */}
+            <div className="cert-expanded-content">
+              <div className="cert-meta">
+                <span className="cert-provider">{cert.provider}</span>
+                <span className="cert-date">{cert.date}</span>
               </div>
+              <h3 className="cert-name">{cert.name}</h3>
             </div>
           </a>
         ))}
