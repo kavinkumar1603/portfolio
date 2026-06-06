@@ -99,16 +99,14 @@ export default function CertificationsSection() {
             className="cert-card"
             style={{ '--card-index': index } as React.CSSProperties}
           >
-            {/* Narrow strip — always visible */}
+            {/* Narrow strip — extremely minimal */}
             <div className="cert-strip">
-              <span className="cert-strip-index">0{index + 1}</span>
-              <div className="cert-strip-line"></div>
               <span className="cert-strip-label">{cert.provider}</span>
             </div>
 
-            {/* Full certificate image + info revealed on expand */}
+            {/* Full certificate revealed on expand */}
             <div className="cert-expanded">
-              {/* Actual certificate image */}
+              {/* Image Box - Clean & Full Color */}
               <div className="cert-img-wrapper">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -116,23 +114,20 @@ export default function CertificationsSection() {
                   alt={cert.name}
                   className="cert-img"
                 />
-                {/* Dark gradient for overlay contrast */}
-                <div className="cert-img-overlay" />
               </div>
 
-              {/* Info bar at bottom */}
-              <div className="cert-info-bar">
-                <div className="cert-info-content">
-                  <div className="cert-exp-meta">
-                    <span className="cert-exp-provider">{cert.provider}</span>
-                    <span className="cert-exp-dot">•</span>
-                    <span className="cert-exp-date">{cert.date}</span>
-                  </div>
-                  <h3 className="cert-exp-name">{cert.name}</h3>
+              {/* Info Box - Solid Block, Clean Typography */}
+              <div className="cert-info-solid">
+                <div className="cert-info-top">
+                  <span className="cert-info-provider">{cert.provider}</span>
+                  <span className="cert-info-date">{cert.date}</span>
                 </div>
                 
-                <div className="cert-exp-cta-circle">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <h3 className="cert-info-name">{cert.name}</h3>
+                
+                <div className="cert-info-link">
+                  View Certificate
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </div>
