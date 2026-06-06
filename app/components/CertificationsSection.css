@@ -1,0 +1,224 @@
+/* ================================================
+   CERTIFICATIONS SECTION — Alternating Timeline
+   ================================================ */
+.cert-section {
+  position: relative;
+  padding: 140px 24px;
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.cert-header {
+  margin-bottom: 100px;
+  text-align: center;
+}
+
+.cert-super {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--grey-lt);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.cert-title-text {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -2px;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+.cert-timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Center Line */
+.cert-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: var(--border);
+  transform: translateX(-50%);
+}
+
+.cert-item {
+  position: relative;
+  width: 50%;
+  padding: 0 50px;
+  margin-bottom: 60px;
+}
+
+/* Alternating Sides */
+.cert-item:nth-child(odd) {
+  left: 0;
+}
+
+.cert-item:nth-child(even) {
+  left: 50%;
+}
+
+.cert-item:last-child {
+  margin-bottom: 0;
+}
+
+/* The Dot on the timeline */
+.cert-dot {
+  position: absolute;
+  top: 40px;
+  width: 20px;
+  height: 20px;
+  background: var(--bg-card);
+  border: 4px solid var(--text-1);
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(255,255,255,0.1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.cert-item:nth-child(odd) .cert-dot {
+  right: -10px;
+}
+
+.cert-item:nth-child(even) .cert-dot {
+  left: -10px;
+}
+
+.cert-item:hover .cert-dot {
+  background: var(--text-1);
+  transform: scale(1.3);
+  box-shadow: 0 0 20px rgba(255,255,255,0.6);
+}
+
+/* The Card */
+.cert-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cert-item:hover .cert-card {
+  transform: translateY(-8px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cert-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.cert-icon {
+  width: 64px;
+  height: 64px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cert-item:hover .cert-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.cert-provider {
+  font-size: 0.9rem;
+  color: var(--grey-lt);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.cert-name {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-1);
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+}
+
+.cert-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.cert-date {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-3);
+  background: rgba(255,255,255,0.02);
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.cert-link-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.cert-item:hover .cert-link-text {
+  color: var(--text-1);
+}
+
+.cert-link-text svg {
+  transition: transform 0.3s ease;
+}
+
+.cert-item:hover .cert-link-text svg {
+  transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cert-timeline::before {
+    left: 20px;
+  }
+  .cert-item {
+    width: 100%;
+    padding: 0 0 0 60px;
+    margin-bottom: 40px;
+  }
+  .cert-item:nth-child(odd),
+  .cert-item:nth-child(even) {
+    left: 0;
+  }
+  .cert-item:nth-child(odd) .cert-dot,
+  .cert-item:nth-child(even) .cert-dot {
+    left: 10px; /* Centered on the 20px line */
+    right: auto;
+  }
+}
