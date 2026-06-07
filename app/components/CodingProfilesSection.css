@@ -1,17 +1,16 @@
 /* ================================================
-   CODING PROFILES SECTION — 3D Holographic Cards
+   CODING PROFILES SECTION — Spotlight Focus Grid
    ================================================ */
 
-.cp-3d-section {
+.cp-spotlight-section {
   padding: 120px 0;
   background: var(--bg);
   border-top: 1px solid var(--border);
   position: relative;
   overflow: hidden;
-  perspective: 1500px; /* Establishes the 3D space */
 }
 
-.cp-3d-inner {
+.cp-spotlight-inner {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 40px;
@@ -47,48 +46,91 @@
 .cp-cards-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  perspective: 1500px;
+  gap: 24px;
+  /* The group hover handles the dimming effect */
 }
 
-/* ── 3D Card ── */
-.cp-3d-card {
-  display: block;
+/* ── Spotlight Card Base ── */
+.cp-spotlight-card {
   position: relative;
-  aspect-ratio: 2 / 3; /* Classic trading card ratio */
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  aspect-ratio: 2 / 3;
   border-radius: 20px;
   text-decoration: none;
-  /* preserve-3d allows children (like text) to pop out in Z space */
-  transform-style: preserve-3d;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  overflow: hidden; /* Contains the glare */
+  background: rgba(255, 255, 255, 0.02);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease, opacity 0.4s ease;
+  overflow: hidden;
 }
 
-/* Glare Layer */
-.cp-glare {
+/* ── Focus / Blur Animation (Group Effect) ── */
+.cp-spotlight-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  z-index: 10;
+}
+
+/* When a sibling is hovered, dim this card */
+.cp-spotlight-card.dimmed {
+  filter: blur(4px) brightness(0.6);
+  opacity: 0.6;
+  transform: scale(0.98);
+}
+
+/* ── The Spotlight Border Effect ── */
+.cp-card-border {
   position: absolute;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  z-index: 0;
-  mix-blend-mode: overlay;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px; /* The width of the border */
+  /* The spotlight gradient that follows the mouse via CSS variables */
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.2),
+    transparent 40%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
 }
 
-/* ── Card Inner Content ── */
+.cp-cards-grid:hover .cp-card-border {
+  opacity: 1; /* Fade in the border glow when mouse enters the grid */
+}
+
+/* ── Inner Content ── */
 .cp-card-content {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: 1px; /* Stay inside the 1px spotlight border */
+  border-radius: 19px;
+  background: rgba(10, 10, 10, 0.9); /* Dark base */
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
   z-index: 1;
-  pointer-events: none; /* Let the parent handle mouse events */
-  /* This pushes the content out towards the user for a parallax effect */
-  transform: translateZ(50px);
 }
 
+/* Background Spotlight Inner Glow */
+.cp-card-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 19px;
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.04),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.cp-cards-grid:hover .cp-card-content::before {
+  opacity: 1;
+}
+
+/* Text & Stats */
 .cp-card-title {
   font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
   font-size: 2rem;
@@ -105,7 +147,6 @@
   margin-bottom: auto;
 }
 
-/* Stats Area */
 .cp-card-stats {
   display: flex;
   flex-direction: column;
@@ -134,7 +175,6 @@
   color: var(--text-1);
 }
 
-/* Footer / CTA */
 .cp-card-footer {
   display: flex;
   align-items: center;
@@ -146,6 +186,11 @@
   letter-spacing: 1px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 24px;
+  transition: color 0.3s ease;
+}
+
+.cp-spotlight-card:hover .cp-card-footer {
+  color: var(--text-1);
 }
 
 .cp-card-footer svg {
@@ -163,13 +208,13 @@
 }
 
 @media (max-width: 600px) {
-  .cp-3d-inner { padding: 0 20px; }
+  .cp-spotlight-inner { padding: 0 20px; }
   
   .cp-cards-grid {
     grid-template-columns: 1fr;
   }
   
-  .cp-3d-card {
+  .cp-spotlight-card {
     aspect-ratio: auto;
     height: 400px;
   }
