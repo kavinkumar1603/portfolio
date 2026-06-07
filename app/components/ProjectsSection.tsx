@@ -2,7 +2,7 @@
 
 import './ProjectsSection.css';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 
 const projects = [
   {
@@ -44,7 +44,10 @@ const projects = [
 ];
 
 /* ── Slide animation variants ── */
-const slideVariants = {
+const easeOut = [0.16, 1, 0.3, 1] as const;
+const easeIn  = [0.4, 0, 1, 1]   as const;
+
+const slideVariants: Variants = {
   enter: (dir: number) => ({
     x: dir > 0 ? 80 : -80,
     opacity: 0,
@@ -52,12 +55,12 @@ const slideVariants = {
   center: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.55, ease: easeOut },
   },
   exit: (dir: number) => ({
     x: dir > 0 ? -60 : 60,
     opacity: 0,
-    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] },
+    transition: { duration: 0.3, ease: easeIn },
   }),
 };
 
