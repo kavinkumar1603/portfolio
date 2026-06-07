@@ -3,6 +3,7 @@ import TechStack from "./components/TechStack";
 import ProjectsSection from "./components/ProjectsSection";
 import EducationSection from "./components/EducationSection";
 import CodingProfilesSection from "./components/CodingProfilesSection";
+import ContactSection from "./components/ContactSection";
 import InternshipsSection from "./components/InternshipsSection";
 import CertificationsSection from "./components/CertificationsSection";
 
@@ -17,6 +18,7 @@ export default function Home() {
         <ProjectsSection />
         <EducationSection />
         <CodingProfilesSection />
+        <ContactSection />
       </main>
 
       <footer className="footer">

@@ -1,146 +1,211 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import './ContactSection.css';
+
+type Message = {
+  id: string;
+  sender: 'bot' | 'user';
+  text: string;
+  time: string;
+};
+
+const getCurrentTime = () => {
+  return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date());
+};
 
 export default function ContactSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [formState, setFormState] = useState({ name: '', email: '', subject: '', message: '' });
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'msg-1',
+      sender: 'bot',
+      text: "Hi! I'm Kavin. What kind of project or role do you want to talk about?",
+      time: getCurrentTime(),
+    }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [step, setStep] = useState(0);
+  const [isTyping, setIsTyping] = useState(false);
+  
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // Auto-scroll to bottom
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSending(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setSending(false);
-    setSent(true);
-    setFormState({ name: '', email: '', subject: '', message: '' });
-    setTimeout(() => setSent(false), 3000);
+    if (!inputValue.trim() || isTyping || step >= 2) return;
+
+    const userText = inputValue;
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      sender: 'user',
+      text: userText,
+      time: getCurrentTime(),
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    setInputValue('');
+    setIsTyping(true);
+
+    // Check if the user text contains an email address
+    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+    const containsEmail = emailRegex.test(userText);
+
+    // Bot reply logic
+    if (step === 0) {
+      if (containsEmail) {
+        // User provided email right away
+        setStep(2);
+        setTimeout(() => {
+          setIsTyping(false);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now().toString(),
+              sender: 'bot',
+              text: "Thank you for reaching out. I have noted your email address and will get back to you shortly.",
+              time: getCurrentTime(),
+            }
+          ]);
+        }, 1500);
+      } else {
+        // Normal flow
+        setStep(1);
+        setTimeout(() => {
+          setIsTyping(false);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now().toString(),
+              sender: 'bot',
+              text: "Great! Please provide your email address below, and I will reach out to you.",
+              time: getCurrentTime(),
+            }
+          ]);
+        }, 1500);
+      }
+    } else if (step === 1) {
+      setStep(2);
+      setTimeout(() => {
+        setIsTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            sender: 'bot',
+            text: "Thank you. I have received your email address and will be in touch soon.",
+            time: getCurrentTime(),
+          }
+        ]);
+      }, 1000);
+    }
   };
 
   return (
-    <section id="contact" className="contact-section" ref={sectionRef}>
-      <div className="section-container">
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <p className="section-label reveal" style={{ justifyContent: 'center' }}>Get In Touch</p>
-          <h2 className="section-title reveal reveal-delay-1">
-            Let&apos;s work together
-          </h2>
-          <p className="section-desc reveal reveal-delay-2" style={{ margin: '0 auto' }}>
-            Have a project in mind or want to collaborate? I&apos;d love to hear from you.
-            Let&apos;s build something amazing together.
-          </p>
-        </div>
+    <section id="contact" className="chat-contact-section">
+      <div className="chat-contact-inner">
+        
+        <motion.div
+          className="contact-header"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="contact-super">Contact</span>
+          <h2 className="contact-title">Let's Chat.</h2>
+        </motion.div>
 
-        <div className="contact-grid">
-          {/* Contact Info */}
-          <div className="contact-info">
-            {[
-              { icon: '📧', label: 'Email', value: 'kavin@example.com' },
-              { icon: '📍', label: 'Location', value: 'Tamil Nadu, India' },
-              { icon: '💼', label: 'LinkedIn', value: 'linkedin.com/in/kavinkumar' },
-              { icon: '🐙', label: 'GitHub', value: 'github.com/kavinkumar' },
-            ].map(item => (
-              <div key={item.label} className={`glass-card contact-item reveal`}>
-                <div className="contact-icon-wrap">{item.icon}</div>
-                <div>
-                  <div className="contact-label">{item.label}</div>
-                  <div className="contact-value">{item.value}</div>
-                </div>
+        <motion.div 
+          className="chat-window-container"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {/* Chat Header */}
+          <div className="chat-header">
+            <div className="chat-header-profile">
+              <div className="chat-avatar">K</div>
+              <div className="chat-info">
+                <h3>Kavin Kumar</h3>
+                <span className="status">
+                  <span className="status-dot"></span> Online
+                </span>
               </div>
-            ))}
+            </div>
+            <div className="chat-actions">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" />
+              </svg>
+            </div>
           </div>
 
-          {/* Form */}
-          <form className="glass-card contact-form reveal reveal-delay-2" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label" htmlFor="contact-name">Name</label>
-                <input
-                  id="contact-name"
-                  className="form-input"
-                  type="text"
-                  placeholder="Your name"
-                  value={formState.name}
-                  onChange={e => setFormState({ ...formState, name: e.target.value })}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="contact-email">Email</label>
-                <input
-                  id="contact-email"
-                  className="form-input"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={formState.email}
-                  onChange={e => setFormState({ ...formState, email: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="contact-subject">Subject</label>
-              <input
-                id="contact-subject"
-                className="form-input"
-                type="text"
-                placeholder="Project inquiry"
-                value={formState.subject}
-                onChange={e => setFormState({ ...formState, subject: e.target.value })}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="contact-message">Message</label>
-              <textarea
-                id="contact-message"
-                className="form-textarea"
-                placeholder="Tell me about your project..."
-                value={formState.message}
-                onChange={e => setFormState({ ...formState, message: e.target.value })}
-                required
-              />
-            </div>
+          {/* Chat History */}
+          <div className="chat-history">
+            <AnimatePresence initial={false}>
+              {messages.map((msg) => (
+                <motion.div 
+                  key={msg.id}
+                  className={`chat-bubble-wrapper ${msg.sender}`}
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className={`chat-bubble ${msg.sender}`}>
+                    <p>{msg.text}</p>
+                  </div>
+                  <span className="chat-time">{msg.time}</span>
+                </motion.div>
+              ))}
 
-            <button
-              id="btn-send-message"
-              type="submit"
-              className="btn-primary"
-              disabled={sending || sent}
-              style={{ alignSelf: 'flex-start', opacity: sending ? 0.7 : 1 }}
-            >
-              {sent ? (
-                <>✅ Message Sent!</>
-              ) : sending ? (
-                <>⏳ Sending...</>
-              ) : (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="22" y1="2" x2="11" y2="13" />
-                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                  </svg>
-                  Send Message
-                </>
+              {isTyping && (
+                <motion.div 
+                  className="chat-bubble-wrapper bot"
+                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="chat-bubble bot typing-indicator">
+                    <span></span><span></span><span></span>
+                  </div>
+                </motion.div>
               )}
-            </button>
-          </form>
-        </div>
+            </AnimatePresence>
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Chat Input */}
+          <div className="chat-input-area">
+            <form onSubmit={handleSubmit} className="chat-form">
+              <input
+                type={step === 1 ? "email" : "text"}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder={step >= 2 ? "Chat ended." : step === 1 ? "Your email address..." : "Type a message..."}
+                disabled={step >= 2 || isTyping}
+                className="chat-input"
+              />
+              <button 
+                type="submit" 
+                className="chat-send-btn" 
+                disabled={!inputValue.trim() || step >= 2 || isTyping}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+              </button>
+            </form>
+          </div>
+
+        </motion.div>
+
       </div>
     </section>
   );

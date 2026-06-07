@@ -38,7 +38,7 @@ const profiles = [
   {
     id: 'skillrack',
     name: 'SkillRack',
-    link: '#',
+    link: 'https://www.skillrack.com/faces/resume.xhtml?id=514961&key=99503fcdf6695cab771f85bea7b3a1fa9017a02f',
     stats: [
       { label: 'Tracks Completed', value: '25+' },
       { label: 'Total Points', value: '15,000+' },
