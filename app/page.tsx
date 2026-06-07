@@ -10,9 +10,9 @@ export default function Home() {
       <main>
         <HeroSection />
         <TechStack />
-        <ProjectsSection />
-        <InternshipsSection />
         <CertificationsSection />
+        <InternshipsSection />
+        <ProjectsSection />
       </main>
 
       <footer className="footer">
