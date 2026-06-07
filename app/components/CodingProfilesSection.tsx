@@ -8,31 +8,31 @@ const profiles = [
   {
     id: 'leetcode',
     name: 'LeetCode',
-    link: '#',
+    link: 'https://leetcode.com/u/kavin88701/',
     stats: [
-      { label: 'Problems Solved', value: '500+' },
-      { label: 'Max Rating', value: '1850' },
-      { label: 'Badges', value: 'Knight' },
+      { label: 'Problems Solved', value: '280' },
+      { label: 'Global Ranking', value: '511,711' },
+      { label: 'Medium/Hard', value: '79' },
     ],
   },
   {
     id: 'codechef',
     name: 'CodeChef',
-    link: '#',
+    link: 'https://www.codechef.com/users/kavinkumarc',
     stats: [
-      { label: 'Global Rank', value: 'Top 5%' },
-      { label: 'Rating', value: '4 Star' },
-      { label: 'Highest Rating', value: '1820' },
+      { label: 'Global Rank', value: '173,470' },
+      { label: 'Rating', value: '881 (1★)' },
+      { label: 'Total Solved', value: '120' },
     ],
   },
   {
     id: 'hackerrank',
     name: 'HackerRank',
-    link: '#',
+    link: 'https://www.hackerrank.com/profile/kavin88701',
     stats: [
-      { label: 'Problem Solving', value: '6 Star' },
-      { label: 'C++', value: '5 Star' },
-      { label: 'Gold Badges', value: '5' },
+      { label: 'Java', value: '5 Star' },
+      { label: 'SQL', value: '1 Star' },
+      { label: 'C', value: '0 Star' },
     ],
   },
   {
@@ -40,9 +40,9 @@ const profiles = [
     name: 'SkillRack',
     link: 'https://www.skillrack.com/faces/resume.xhtml?id=514961&key=99503fcdf6695cab771f85bea7b3a1fa9017a02f',
     stats: [
-      { label: 'Tracks Completed', value: '25+' },
-      { label: 'Total Points', value: '15,000+' },
-      { label: 'Medals', value: '12' },
+      { label: 'Certificates', value: '8' },
+      { label: 'Status', value: 'Active' },
+      { label: 'Profile', value: 'Verified' },
     ],
   },
 ];

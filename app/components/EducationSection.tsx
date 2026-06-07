@@ -6,20 +6,20 @@ import './EducationSection.css';
 const educationData = [
   {
     id: 'edu-2',
-    year: '2021',
-    degree: 'Bachelor of Engineering in IT',
-    institution: 'Anna University',
+    year: 'Current',
+    degree: 'Bachelor of Engineering in CSE',
+    institution: 'Sri Eshwar College of Engineering',
     description:
-      'Core coursework included Data Structures, Operating Systems, and Database Management. Led the University Coding Club and organized hackathons.',
-    skills: ['C++', 'Java', 'Full-stack Web Dev'],
+      'Pursuing a comprehensive curriculum in Computer Science and Engineering, focusing on software development, algorithms, and modern web technologies.',
+    skills: ['C++', 'Java', 'Full-stack Web Dev', 'Data Structures'],
   },
   {
     id: 'edu-3',
-    year: '2017',
-    degree: 'Higher Secondary Education',
-    institution: "St. John's High School",
+    year: 'Completed',
+    degree: 'Higher Secondary Education (HSE)',
+    institution: 'Akshaya Academy Matric Higher Secondary School',
     description:
-      'Focused on Computer Science and Mathematics. Valedictorian of the graduating class.',
+      'Strong academic foundation focusing on Mathematics, Computer Science, and core sciences.',
     skills: ['Physics', 'Chemistry', 'Mathematics', 'Computer Science'],
   },
 ];

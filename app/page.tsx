@@ -27,9 +27,9 @@ export default function Home() {
             © {new Date().getFullYear()} Kavin Kumar. Crafted with ❤️ & Next.js
           </p>
           <div className="footer-links">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+            <a href="https://github.com/kavinkumar1603" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/ckavinkumar/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://x.com/KavinKumar_16" target="_blank" rel="noopener noreferrer">Twitter</a>
           </div>
         </div>
       </footer>

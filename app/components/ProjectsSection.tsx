@@ -9,36 +9,36 @@ const projects = [
     id: 'engal-sandhai',
     name: 'Engal Sandhai',
     description:
-      'A community-driven local marketplace connecting buyers and sellers within neighbourhoods. Features real-time listings, in-app chat, and hyperlocal geolocation search — built to empower grassroots commerce.',
-    tech: ['React', 'Node.js', 'MongoDB', 'Socket.io'],
-    github: '#',
-    live: '#',
+      'A web-based billing and realtime stock management system built for a college campus vegetable store. Features role-based auth, static QR payments, and atomic realtime stock updates to prevent overselling.',
+    tech: ['React', 'TypeScript', 'Tailwind CSS', 'Firebase'],
+    github: 'https://github.com/kavinkumar1603/Engal-Sandhai',
+    live: 'https://engal-sandhai.web.app/',
   },
   {
     id: 'parknear',
     name: 'ParkNear',
     description:
-      'Smart parking finder that surfaces real-time slot availability near your location. Includes interactive maps, advance slot booking, and QR-based check-in for frictionless parking anywhere in the city.',
-    tech: ['Next.js', 'Tailwind CSS', 'Google Maps API', 'Firebase'],
-    github: '#',
-    live: '#',
+      'A quick parking application that helps users find nearby parking locations, view real-time slot availability by level, and book slots for cars or bikes. Features Google Maps integration and dynamic pricing.',
+    tech: ['React', 'Tailwind CSS', 'Google Maps API', 'Node.js'],
+    github: 'https://github.com/kavinkumar1603/parknear',
+    live: 'https://parknear.vercel.app/',
   },
   {
     id: 'truthlens',
     name: 'TruthLens',
     description:
-      'An AI-powered credibility analyser that scores news articles for authenticity using NLP pipelines and a fine-tuned classification model. Surfaces source metadata and confidence ratings in real time.',
-    tech: ['Python', 'Scikit-learn', 'FastAPI', 'React'],
-    github: '#',
+      'An ML-powered fact-checking engine that classifies news articles as true or fake using NLP. It features a custom trained Logistic Regression model leveraging TF-IDF vectorization, served via a Python backend.',
+    tech: ['Python', 'Scikit-learn', 'React', 'NLP'],
+    github: 'https://github.com/kavinkumar1603/truth_lens',
     live: '#',
   },
   {
     id: 'taskmate',
     name: 'TaskMate',
     description:
-      'A full-stack productivity board with Kanban drag-and-drop columns, role-based access control, and Slack-style threaded activity feeds. Designed from the ground up for async team collaboration.',
-    tech: ['TypeScript', 'Express', 'PostgreSQL', 'Prisma'],
-    github: '#',
+      'A full-stack task management mobile application featuring secure user authentication, an admin dashboard, push notifications, and real-time updates synchronized across devices.',
+    tech: ['React Native', 'Expo', 'TypeScript', 'Firebase'],
+    github: 'https://github.com/kavinkumar1603/Task_Mate',
     live: '#',
   },
 ];
@@ -199,18 +199,29 @@ export default function ProjectsSection() {
                     href={project.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="prj-link"
+                    className="prj-link prj-link--primary"
                   >
                     <IconGitHub /> GitHub
                   </a>
-                  <a
-                    href={project.live}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="prj-link prj-link--primary"
-                  >
-                    Live Demo <IconExternal />
-                  </a>
+                  
+                  {project.live !== '#' ? (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="prj-link prj-link--primary"
+                    >
+                      Live Demo <IconExternal />
+                    </a>
+                  ) : (
+                    <span 
+                      className="prj-link" 
+                      style={{ opacity: 0.3, filter: 'blur(0.5px)', cursor: 'not-allowed' }}
+                      title="No live demo available"
+                    >
+                      Live Demo <IconExternal />
+                    </span>
+                  )}
                 </div>
               </div>
             </motion.div>
