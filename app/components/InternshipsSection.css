@@ -123,39 +123,23 @@
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Large blurred icon in the background */
-.int-logo-blur {
-  position: absolute;
-  font-size: 6rem;
-  color: rgba(255,255,255,0.07);
-  filter: blur(10px);
+/* Company logo as the main crisp visual */
+.int-logo-image {
+  width: 180px;
+  max-height: 120px;
+  object-fit: contain;
+  opacity: 0.95;
   transform: scale(1);
-  transition: filter 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
   user-select: none;
-}
-
-/* Company name sits on top of the blur */
-.int-front-name {
-  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
-  font-size: 1.9rem;
-  font-weight: 700;
-  color: var(--text-1);
-  letter-spacing: -0.5px;
-  text-align: center;
-  z-index: 2;
-  position: relative;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.15));
+  z-index: 0;
 }
 
 /* On hover: fade out front */
 .int-item:hover .int-front {
   opacity: 0;
   transform: scale(0.95);
-}
-
-.int-item:hover .int-logo-blur {
-  filter: blur(22px);
-  transform: scale(1.15);
 }
 
 /* ────────────────────────────

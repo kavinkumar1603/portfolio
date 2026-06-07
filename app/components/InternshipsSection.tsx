@@ -7,21 +7,21 @@ const internships = [
   {
     id: 'technovanam',
     company: 'Technovanam',
-    icon: '🏢',
-    role: 'Intern',
-    duration: 'Duration coming soon...',
-    description: 'Description coming soon...',
-    tech: ['Tech Stack 1', 'Tech Stack 2'],
+    logo: '/TV_LOGO.png',
+    role: 'MERN Stack Developer',
+    duration: 'Internship',
+    description: 'Developed and optimized full-stack web applications using the MERN stack. Built responsive frontend interfaces with React and robust backend APIs with Node.js and Express.',
+    tech: ['React', 'Node.js', 'Express', 'MongoDB'],
     link: '#'
   },
   {
     id: 'efiq',
     company: 'Efiq Solutions',
-    icon: '💼',
-    role: 'Intern',
-    duration: 'Duration coming soon...',
-    description: 'Description coming soon...',
-    tech: ['Tech Stack 1', 'Tech Stack 2'],
+    logo: '/ES_LOGO.svg',
+    role: 'MERN Stack Developer',
+    duration: 'Internship',
+    description: 'Architected scalable web solutions leveraging MongoDB and Express. Implemented complex state management in React and ensured seamless data flow across the stack.',
+    tech: ['MongoDB', 'Express', 'React', 'Node.js'],
     link: '#'
   }
 ];
@@ -59,10 +59,9 @@ export default function InternshipsSection() {
             <div className="int-dot" />
 
             <div className="int-card">
-              {/* ── Default: blurred icon + company name ── */}
+              {/* ── Default: crisp logo ── */}
               <div className="int-front">
-                <div className="int-logo-blur">{internship.icon}</div>
-                <h3 className="int-front-name">{internship.company}</h3>
+                <img src={internship.logo} alt={internship.company} className="int-logo-image" />
               </div>
 
               {/* ── Hover: full details overlay ── */}

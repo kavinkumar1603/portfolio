@@ -360,10 +360,19 @@ body {
    FOOTER
    ===================== */
 .footer {
-  padding: 28px 36px;
-  border-top: 1px solid var(--border);
   position: relative;
-  z-index: 1;
+  padding: 60px 36px 40px;
+  background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.02) 100%);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  overflow: hidden;
+}
+
+.footer-glow {
+  position: absolute;
+  top: 0; left: 50%;
+  width: 600px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-50%);
 }
 
 .footer-inner {
@@ -372,26 +381,55 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.footer-logo {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-1);
+  letter-spacing: -1px;
 }
 
 .footer-copy {
   color: var(--text-3);
-  font-size: 0.82rem;
+  font-size: 0.85rem;
+  font-weight: 500;
 }
 
 .footer-links {
   display: flex;
-  gap: 24px;
+  gap: 16px;
 }
 
 .footer-links a {
-  color: var(--text-3);
-  text-decoration: none;
-  font-size: 0.82rem;
-  transition: color 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.footer-links a:hover { color: var(--indigo-lt); }
+.footer-links a:hover { 
+  color: var(--text-1); 
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+}
 
 /* =====================
    REVEAL UTILITY
