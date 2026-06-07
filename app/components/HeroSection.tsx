@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const roles = [
   'Full Stack Developer',
@@ -13,6 +14,12 @@ export default function HeroSection() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayed, setDisplayed] = useState('');
   const [deleting, setDeleting] = useState(false);
+
+  // Parallax Scroll Hooks
+  const { scrollY } = useScroll();
+  const textScale = useTransform(scrollY, [0, 600], [1, 1.2]);
+  const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const gridY = useTransform(scrollY, [0, 800], [0, 250]);
 
   useEffect(() => {
     const current = roles[roleIndex];
@@ -42,9 +49,16 @@ export default function HeroSection() {
   return (
     <section id="hero" className="hero-section">
 
-      <div className="hero-grid" aria-hidden="true" />
+      <motion.div 
+        className="hero-grid" 
+        aria-hidden="true" 
+        style={{ y: gridY }}
+      />
 
-      <div className="hero-center">
+      <motion.div 
+        className="hero-center"
+        style={{ scale: textScale, opacity: textOpacity }}
+      >
 
         {/* Name — static gradient, no animation */}
         <h1 className="hero-name">Kavin Kumar</h1>
@@ -61,7 +75,7 @@ export default function HeroSection() {
           to robust back-end systems.
         </p>
 
-      </div>
+      </motion.div>
 
       {/* Scroll hint — pinned to bottom */}
       <button

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import { motion, Variants } from 'framer-motion';
 
 const stack = [
   {
@@ -36,46 +37,63 @@ const marqueeItems = [
   'MySQL', 'Firebase', 'AWS', 'Google Cloud', 'Git', 'Postman', 'Linux',
 ];
 
+// Framer Motion Variants
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 }
+  }
+};
+
+const rowVariants: Variants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: {
+    opacity: 1, 
+    x: 0,
+    transition: { ease: [0.16, 1, 0.3, 1], duration: 0.7 }
+  }
+};
+
 export default function TechStack() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.05 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section id="stack" className="ts-section" ref={sectionRef}>
+    <section id="stack" className="ts-section">
       <div className="ts-inner">
 
         {/* ── Top row: label + big title ── */}
-        <div className={`ts-top ${visible ? 'ts-visible' : ''}`}>
+        <motion.div 
+          className="ts-top"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
           <span className="ts-super">What I work with</span>
           <div className="ts-heading-row">
             <h2 className="ts-heading">Tech Stack</h2>
             <span className="ts-count">{stack.length} categories</span>
           </div>
           <div className="ts-top-line" />
-        </div>
+        </motion.div>
 
         {/* ── Category rows ── */}
-        <div
+        <motion.div
           className="ts-rows"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-10%" }}
           onMouseLeave={() => setHovered(null)}
         >
           {stack.map((group, gi) => (
-            <div
+            <motion.div
+              variants={rowVariants}
               key={group.id}
-              className={`ts-row ${visible ? 'ts-row-in' : ''} ${
+              className={`ts-row ${
                 hovered && hovered !== group.id ? 'ts-row-dim' : ''
               }`}
-              style={{ animationDelay: `${0.15 + gi * 0.1}s` }}
               onMouseEnter={() => setHovered(group.id)}
             >
               {/* left: index + category */}
@@ -92,21 +110,30 @@ export default function TechStack() {
               {/* right: tags */}
               <div className="ts-row-right">
                 {group.items.map((item, ii) => (
-                  <span
+                  <motion.span
                     key={item}
-                    className={`ts-pill ${visible ? 'ts-pill-in' : ''}`}
-                    style={{ animationDelay: `${0.3 + gi * 0.1 + ii * 0.045}s` }}
+                    className="ts-pill"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.2 + (gi * 0.1) + (ii * 0.03), ease: "easeOut" }}
                   >
                     {item}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* ── Bottom marquee ── */}
-        <div className={`ts-ticker-wrap ${visible ? 'ts-visible' : ''}`} style={{ animationDelay: '0.8s' }}>
+        <motion.div 
+          className="ts-ticker-wrap"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 1, delay: 0.5 }}
+        >
           <div className="ts-ticker">
             <div className="ts-ticker-track">
               {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((t, i) => (
@@ -116,7 +143,7 @@ export default function TechStack() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </section>

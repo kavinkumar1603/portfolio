@@ -1,0 +1,385 @@
+/* ================================================
+   PROJECTS SECTION — Editorial Row Reveal
+   ================================================ */
+
+.prj-section {
+  padding: 120px 0 160px;
+  border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Inner wrapper ── */
+.prj-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+/* ── Section header ── */
+.prj-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 80px;
+  gap: 24px;
+}
+
+.prj-super {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 14px;
+}
+
+.prj-section-title {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1;
+  color: var(--text-1);
+}
+
+.prj-header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  padding-bottom: 6px;
+}
+
+.prj-header-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: 1px;
+}
+
+.prj-header-line {
+  width: 40px;
+  height: 1px;
+  background: var(--text-3);
+}
+
+/* ── Row list ── */
+.prj-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Each project row ── */
+.prj-row {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.35s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.prj-row:hover,
+.prj-row--open {
+  background: rgba(255, 255, 255, 0.012);
+}
+
+/* ── Giant ghost number (parallax on mouse) ── */
+.prj-row-num-bg {
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: clamp(6rem, 14vw, 13rem);
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.03);
+  letter-spacing: -6px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  transition:
+    -webkit-text-stroke-color 0.5s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+  will-change: transform;
+}
+
+.prj-row:hover .prj-row-num-bg,
+.prj-row--open .prj-row-num-bg {
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ── Sweep gradient underline ── */
+.prj-row-sweep {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(144, 144, 144, 0.6) 40%,
+    rgba(224, 224, 224, 0.4) 60%,
+    transparent 100%
+  );
+  transition: width 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.prj-row:hover .prj-row-sweep,
+.prj-row--open .prj-row-sweep {
+  width: 100%;
+}
+
+/* ── Main visible row content ── */
+.prj-row-main {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 64px 1fr auto auto;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 0;
+}
+
+/* Small index badge */
+.prj-row-index {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-3);
+  transition: color 0.35s ease;
+}
+
+.prj-row:hover .prj-row-index,
+.prj-row--open .prj-row-index {
+  color: var(--grey);
+}
+
+/* Project name — BIG */
+.prj-row-name {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
+  font-size: clamp(1.9rem, 3.5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  color: var(--text-2);
+  line-height: 1;
+  transition: color 0.35s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.prj-row:hover .prj-row-name,
+.prj-row--open .prj-row-name {
+  color: var(--text-1);
+  transform: translateX(6px);
+}
+
+/* Inline tech stack */
+.prj-row-stack {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-3);
+  letter-spacing: 0.3px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 280px;
+  transition: color 0.35s ease;
+}
+
+.prj-row:hover .prj-row-stack,
+.prj-row--open .prj-row-stack {
+  color: var(--grey);
+}
+
+.prj-stack-sep {
+  margin: 0 8px;
+  opacity: 0.25;
+}
+
+/* Circle arrow CTA */
+.prj-row-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 52px;
+}
+
+.prj-row-cta-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateY(6px);
+  white-space: nowrap;
+}
+
+.prj-row:hover .prj-row-cta-label,
+.prj-row--open .prj-row-cta-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.prj-row-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  font-size: 1.1rem;
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.prj-row:hover .prj-row-circle {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-1);
+  transform: rotate(45deg) scale(1.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.prj-row--open .prj-row-circle {
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--text-1);
+  transform: rotate(135deg);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Expandable detail drawer ── */
+.prj-row-drawer {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.prj-row-drawer-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  padding: 0 0 52px;
+  padding-left: 104px; /* align under name */
+}
+
+/* Description */
+.prj-row-desc {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--grey);
+  max-width: 480px;
+}
+
+/* Side: tags + links */
+.prj-row-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 24px;
+}
+
+.prj-row-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prj-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-3);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 6px;
+  padding: 5px 12px;
+  transition: all 0.3s ease;
+}
+
+.prj-tag:hover {
+  color: var(--grey-lt);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.prj-row-links {
+  display: flex;
+  gap: 10px;
+}
+
+.prj-row-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--text-3);
+  text-decoration: none;
+  padding: 9px 18px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.025);
+  transition: all 0.3s ease;
+}
+
+.prj-row-link:hover {
+  color: var(--text-1);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.prj-row-link svg {
+  opacity: 0.7;
+  transition: opacity 0.25s;
+}
+
+.prj-row-link:hover svg {
+  opacity: 1;
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .prj-inner { padding: 0 32px; }
+  .prj-row-main {
+    grid-template-columns: 44px 1fr auto;
+    gap: 24px;
+  }
+  .prj-row-stack { display: none; }
+  .prj-row-drawer-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-left: 68px;
+  }
+}
+
+@media (max-width: 620px) {
+  .prj-inner { padding: 0 20px; }
+  .prj-header { flex-direction: column; align-items: flex-start; }
+  .prj-row-main {
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 28px 0;
+  }
+  .prj-row-index { display: none; }
+  .prj-row-name { font-size: 1.75rem; letter-spacing: -1px; }
+  .prj-row-drawer-inner { padding-left: 0; }
+  .prj-row-num-bg { right: 8px; }
+}
