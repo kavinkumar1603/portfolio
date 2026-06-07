@@ -1,17 +1,18 @@
 /* ================================================
-   CODING PROFILES SECTION — Premium Glass Grid
+   CODING PROFILES SECTION — 3D Holographic Cards
    ================================================ */
 
-.cp-section {
+.cp-3d-section {
   padding: 120px 0;
   background: var(--bg);
   border-top: 1px solid var(--border);
   position: relative;
   overflow: hidden;
+  perspective: 1500px; /* Establishes the 3D space */
 }
 
-.cp-inner {
-  max-width: 1200px;
+.cp-3d-inner {
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 40px;
   position: relative;
@@ -20,7 +21,8 @@
 
 /* Header */
 .cp-header {
-  margin-bottom: 60px;
+  margin-bottom: 80px;
+  text-align: center;
 }
 
 .cp-super {
@@ -41,170 +43,134 @@
   color: var(--text-1);
 }
 
-/* ── Grid ── */
-.cp-grid {
+/* ── Grid Container ── */
+.cp-cards-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 32px;
+  perspective: 1500px;
 }
 
-/* ── Cards ── */
-.cp-card {
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 24px;
-  padding: 40px;
-  text-decoration: none;
+/* ── 3D Card ── */
+.cp-3d-card {
+  display: block;
   position: relative;
-  overflow: hidden;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+  aspect-ratio: 2 / 3; /* Classic trading card ratio */
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  text-decoration: none;
+  /* preserve-3d allows children (like text) to pop out in Z space */
+  transform-style: preserve-3d;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden; /* Contains the glare */
 }
 
-/* Base inner glow setup */
-.cp-card::before {
-  content: '';
+/* Glare Layer */
+.cp-glare {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: overlay;
+}
+
+/* ── Card Inner Content ── */
+.cp-card-content {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-/* Active Hover State */
-.cp-card:hover {
-  transform: translateY(-8px);
-  background: rgba(255, 255, 255, 0.03);
-}
-.cp-card:hover::before {
-  opacity: 1;
-}
-
-/* Brand Colors / Glows */
-.cp-card.glow-leetcode:hover {
-  border-color: rgba(255, 161, 22, 0.4);
-  box-shadow: 0 20px 40px rgba(255, 161, 22, 0.1);
-}
-.cp-card.glow-leetcode::before {
-  background: radial-gradient(circle at top right, rgba(255, 161, 22, 0.15) 0%, transparent 60%);
-}
-
-.cp-card.glow-codechef:hover {
-  border-color: rgba(139, 69, 19, 0.4); /* Brown/Orange */
-  box-shadow: 0 20px 40px rgba(139, 69, 19, 0.1);
-}
-.cp-card.glow-codechef::before {
-  background: radial-gradient(circle at top right, rgba(139, 69, 19, 0.15) 0%, transparent 60%);
-}
-
-.cp-card.glow-hackerrank:hover {
-  border-color: rgba(46, 200, 102, 0.4);
-  box-shadow: 0 20px 40px rgba(46, 200, 102, 0.1);
-}
-.cp-card.glow-hackerrank::before {
-  background: radial-gradient(circle at top right, rgba(46, 200, 102, 0.15) 0%, transparent 60%);
-}
-
-.cp-card.glow-skillrack:hover {
-  border-color: rgba(65, 105, 225, 0.4); /* Royal Blue */
-  box-shadow: 0 20px 40px rgba(65, 105, 225, 0.1);
-}
-.cp-card.glow-skillrack::before {
-  background: radial-gradient(circle at top right, rgba(65, 105, 225, 0.15) 0%, transparent 60%);
-}
-
-/* ── Inner Content ── */
-.cp-card-top {
+  padding: 32px 24px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
+  flex-direction: column;
+  z-index: 1;
+  pointer-events: none; /* Let the parent handle mouse events */
+  /* This pushes the content out towards the user for a parallax effect */
+  transform: translateZ(50px);
 }
 
-.cp-name {
+.cp-card-title {
   font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: -1px;
   color: var(--text-1);
+  margin-bottom: 4px;
 }
 
-.cp-username {
+.cp-card-user {
   font-family: 'Consolas', 'Courier New', monospace;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-3);
+  margin-bottom: auto;
 }
 
-.cp-stats {
-  display: flex;
-  gap: 32px;
-  margin-bottom: 40px;
-}
-
-.cp-stat-box {
+/* Stats Area */
+.cp-card-stats {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
+  margin-bottom: 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
 }
 
-.cp-stat-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--text-2);
+.cp-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .cp-stat-label {
   font-size: 0.85rem;
-  color: var(--grey);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* ── Footer / CTA ── */
-.cp-card-footer {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: auto;
   color: var(--text-3);
-  transition: color 0.3s ease;
-}
-
-.cp-view-text {
-  font-size: 0.9rem;
-  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
-.cp-arrow {
-  width: 20px;
-  height: 20px;
-  transition: transform 0.3s ease;
-}
-
-.cp-card:hover .cp-card-footer {
+.cp-stat-value {
+  font-size: 1rem;
+  font-weight: 700;
   color: var(--text-1);
 }
 
-.cp-card:hover .cp-arrow {
-  transform: translateX(8px);
+/* Footer / CTA */
+.cp-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+}
+
+.cp-card-footer svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* ── Responsive Layout ── */
-@media (max-width: 960px) {
-  .cp-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 1200px) {
+  .cp-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
+    margin: 0 auto;
   }
 }
 
 @media (max-width: 600px) {
-  .cp-inner { padding: 0 20px; }
-  .cp-card { padding: 32px; }
-  .cp-name { font-size: 1.6rem; }
-  .cp-stat-value { font-size: 1.2rem; }
+  .cp-3d-inner { padding: 0 20px; }
+  
+  .cp-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cp-3d-card {
+    aspect-ratio: auto;
+    height: 400px;
+  }
 }
