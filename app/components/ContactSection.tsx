@@ -27,6 +27,7 @@ export default function ContactSection() {
   const [inputValue, setInputValue] = useState('');
   const [step, setStep] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
+  const [userMessage, setUserMessage] = useState('');
   
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -34,6 +35,25 @@ export default function ContactSection() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
+
+  const sendEmail = async (message: string, email: string) => {
+    try {
+      await fetch("https://formsubmit.co/ajax/kavin88701@gmail.com", {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            _subject: "New Contact Message from Portfolio",
+            email: email,
+            message: message
+        })
+      });
+    } catch (error) {
+      console.error("Error sending email", error);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,12 +74,14 @@ export default function ContactSection() {
     // Check if the user text contains an email address
     const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
     const containsEmail = emailRegex.test(userText);
+    const extractedEmail = userText.match(emailRegex)?.[0];
 
     // Bot reply logic
     if (step === 0) {
-      if (containsEmail) {
+      if (containsEmail && extractedEmail) {
         // User provided email right away
         setStep(2);
+        sendEmail(userText, extractedEmail);
         setTimeout(() => {
           setIsTyping(false);
           setMessages((prev) => [
@@ -74,6 +96,7 @@ export default function ContactSection() {
         }, 1500);
       } else {
         // Normal flow
+        setUserMessage(userText);
         setStep(1);
         setTimeout(() => {
           setIsTyping(false);
@@ -90,6 +113,8 @@ export default function ContactSection() {
       }
     } else if (step === 1) {
       setStep(2);
+      const emailToUse = extractedEmail || userText;
+      sendEmail(userMessage, emailToUse);
       setTimeout(() => {
         setIsTyping(false);
         setMessages((prev) => [
