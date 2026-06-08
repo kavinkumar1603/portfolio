@@ -166,7 +166,7 @@
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: var(--text-3);
+  color: var(--grey-lt);
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
@@ -175,7 +175,7 @@
 }
 
 .edu-timeline-item:hover .edu-tag {
-  color: var(--text-2);
+  color: var(--text-1);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
