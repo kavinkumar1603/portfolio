@@ -258,18 +258,7 @@ body {
   letter-spacing: -3px;
   line-height: 1;
   margin-bottom: 20px;
-
-  /* Pure grey gradient: near-white → mid grey → dark grey */
-  background: linear-gradient(
-    135deg,
-    #e8e8e8 0%,
-    #a8a8a8 40%,
-    #686868 75%,
-    #404040 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-1);
 }
 
 .hero-role-wrap {
