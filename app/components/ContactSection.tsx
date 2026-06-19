@@ -16,14 +16,7 @@ const getCurrentTime = () => {
 };
 
 export default function ContactSection() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'msg-1',
-      sender: 'bot',
-      text: "Hi! I'm Kavin. What kind of project or role do you want to talk about?",
-      time: getCurrentTime(),
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [step, setStep] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
@@ -31,9 +24,30 @@ export default function ContactSection() {
   
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom
+  // Initialize messages on mount to avoid server/client hydration mismatch with local time
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const t = setTimeout(() => {
+      setMessages([
+        {
+          id: 'msg-1',
+          sender: 'bot',
+          text: "Hi! I'm Kavin. What kind of project or role do you want to talk about?",
+          time: getCurrentTime(),
+        }
+      ]);
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Auto-scroll to bottom of chat history container
+  useEffect(() => {
+    const chatHistory = chatEndRef.current?.parentElement;
+    if (chatHistory) {
+      chatHistory.scrollTo({
+        top: chatHistory.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }, [messages, isTyping]);
 
   const sendEmail = async (message: string, email: string) => {
@@ -142,7 +156,7 @@ export default function ContactSection() {
           transition={{ duration: 0.6 }}
         >
           <span className="contact-super">Contact</span>
-          <h2 className="contact-title">Let's Chat.</h2>
+          <h2 className="contact-title">Let&apos;s Chat.</h2>
         </motion.div>
 
         <motion.div 
@@ -215,11 +229,13 @@ export default function ContactSection() {
                 placeholder={step >= 2 ? "Chat ended." : step === 1 ? "Your email address..." : "Type a message..."}
                 disabled={step >= 2 || isTyping}
                 className="chat-input"
+                suppressHydrationWarning={true}
               />
               <button 
                 type="submit" 
                 className="chat-send-btn" 
                 disabled={!inputValue.trim() || step >= 2 || isTyping}
+                suppressHydrationWarning={true}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13" />

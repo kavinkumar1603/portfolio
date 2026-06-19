@@ -234,6 +234,7 @@ export default function ProjectsSection() {
             className="prj-nav"
             onClick={() => paginate(-1)}
             aria-label="Previous project"
+            suppressHydrationWarning={true}
           >
             <IconArrowLeft /> Prev
           </button>
@@ -247,6 +248,7 @@ export default function ProjectsSection() {
                 role="tab"
                 aria-selected={i === page}
                 aria-label={`Go to ${p.name}`}
+                suppressHydrationWarning={true}
               />
             ))}
           </div>
@@ -255,6 +257,7 @@ export default function ProjectsSection() {
             className="prj-nav"
             onClick={() => paginate(1)}
             aria-label="Next project"
+            suppressHydrationWarning={true}
           >
             Next <IconArrowRight />
           </button>

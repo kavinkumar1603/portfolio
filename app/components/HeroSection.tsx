@@ -83,6 +83,7 @@ export default function HeroSection() {
         className="scroll-hint"
         onClick={scrollDown}
         aria-label="Scroll down"
+        suppressHydrationWarning={true}
       >
         <div className="scroll-mouse">
           <div className="scroll-wheel" />
