@@ -1,253 +1,247 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import './ContactSection.css';
 
-type Message = {
-  id: string;
-  sender: 'bot' | 'user';
-  text: string;
-  time: string;
-};
+const ENDPOINT = 'https://formsubmit.co/ajax/kavin88701@gmail.com';
+const EMAIL = 'kavin88701@gmail.com';
 
-const getCurrentTime = () => {
-  return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date());
-};
+const topics = ['a full-time role', 'an internship', 'a freelance project', 'a collaboration', 'just saying hi'];
+
+type Status = 'idle' | 'sending' | 'sent' | 'error';
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Inline input that hugs its content so the sentence stays a sentence.
+ * A hidden mirror of the text shares the input's grid cell and sets its width.
+ */
+function Blank({
+  name, value, onChange, placeholder, type = 'text', required, autoComplete, label,
+}: {
+  name: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
+  type?: string;
+  required?: boolean;
+  autoComplete?: string;
+  label: string;
+}) {
+  return (
+    <span className={`lf-blank${value ? '' : ' is-empty'}`}>
+      <label htmlFor={`lf-${name}`} className="sr-only">{label}</label>
+      <span className="lf-blank-mirror" aria-hidden="true">{value || placeholder}</span>
+      <input
+        id={`lf-${name}`}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        autoComplete={autoComplete}
+        size={1}
+        suppressHydrationWarning
+      />
+    </span>
+  );
+}
 
 export default function ContactSection() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const [step, setStep] = useState(0);
-  const [isTyping, setIsTyping] = useState(false);
-  const [userMessage, setUserMessage] = useState('');
-  
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const [form, setForm] = useState({ name: '', company: '', email: '', message: '' });
+  const [topic, setTopic] = useState(topics[0]);
+  const [status, setStatus] = useState<Status>('idle');
 
-  // Initialize messages on mount to avoid server/client hydration mismatch with local time
-  useEffect(() => {
-    const t = setTimeout(() => {
-      setMessages([
-        {
-          id: 'msg-1',
-          sender: 'bot',
-          text: "Hi! I'm Kavin. What kind of project or role do you want to talk about?",
-          time: getCurrentTime(),
-        }
-      ]);
-    }, 0);
-    return () => clearTimeout(t);
-  }, []);
+  const update = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  // Auto-scroll to bottom of chat history container
-  useEffect(() => {
-    const chatHistory = chatEndRef.current?.parentElement;
-    if (chatHistory) {
-      chatHistory.scrollTo({
-        top: chatHistory.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [messages, isTyping]);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (status === 'sending') return;
+    const honey = (e.currentTarget.elements.namedItem('_honey') as HTMLInputElement | null)?.value;
+    if (honey) return; // bot
 
-  const sendEmail = async (message: string, email: string) => {
+    setStatus('sending');
     try {
-      await fetch("https://formsubmit.co/ajax/kavin88701@gmail.com", {
-        method: "POST",
-        headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-            _subject: "New Contact Message from Portfolio",
-            email: email,
-            message: message
-        })
+          _subject: `Portfolio enquiry — ${topic} — ${form.name}`,
+          _replyto: form.email,
+          name: form.name,
+          company: form.company || '—',
+          email: form.email,
+          topic,
+          message: form.message,
+        }),
       });
-    } catch (error) {
-      console.error("Error sending email", error);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || String(data.success) === 'false') throw new Error('send failed');
+      setStatus('sent');
+    } catch {
+      setStatus('error');
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputValue.trim() || isTyping || step >= 2) return;
-
-    const userText = inputValue;
-    const userMsg: Message = {
-      id: Date.now().toString(),
-      sender: 'user',
-      text: userText,
-      time: getCurrentTime(),
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
-    setInputValue('');
-    setIsTyping(true);
-
-    // Check if the user text contains an email address
-    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-    const containsEmail = emailRegex.test(userText);
-    const extractedEmail = userText.match(emailRegex)?.[0];
-
-    // Bot reply logic
-    if (step === 0) {
-      if (containsEmail && extractedEmail) {
-        // User provided email right away
-        setStep(2);
-        sendEmail(userText, extractedEmail);
-        setTimeout(() => {
-          setIsTyping(false);
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now().toString(),
-              sender: 'bot',
-              text: "Thank you for reaching out. I have noted your email address and will get back to you shortly.",
-              time: getCurrentTime(),
-            }
-          ]);
-        }, 1500);
-      } else {
-        // Normal flow
-        setUserMessage(userText);
-        setStep(1);
-        setTimeout(() => {
-          setIsTyping(false);
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: Date.now().toString(),
-              sender: 'bot',
-              text: "Great! Please provide your email address below, and I will reach out to you.",
-              time: getCurrentTime(),
-            }
-          ]);
-        }, 1500);
-      }
-    } else if (step === 1) {
-      setStep(2);
-      const emailToUse = extractedEmail || userText;
-      sendEmail(userMessage, emailToUse);
-      setTimeout(() => {
-        setIsTyping(false);
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: Date.now().toString(),
-            sender: 'bot',
-            text: "Thank you. I have received your email address and will be in touch soon.",
-            time: getCurrentTime(),
-          }
-        ]);
-      }, 1000);
-    }
+  const reset = () => {
+    setForm({ name: '', company: '', email: '', message: '' });
+    setTopic(topics[0]);
+    setStatus('idle');
   };
 
   return (
-    <section id="contact" className="chat-contact-section">
-      <div className="chat-contact-inner">
-        
-        <motion.div
-          className="contact-header"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="contact-super">Contact</span>
-          <h2 className="contact-title">Let&apos;s Chat.</h2>
-        </motion.div>
+    <section
+      id="contact"
+      className="lf section"
+      data-shape="portal"
+      data-shape-x="0.55"
+      data-shape-scale="1.1"
+      data-shape-opacity="0.45"
+    >
+      <header className="lf-head">
+        <div>
+          <span className="section-label">(07) — Contact</span>
+          <motion.h2
+            className="section-title"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease }}
+          >
+            Let&apos;s <em>talk.</em>
+          </motion.h2>
+        </div>
 
-        <motion.div 
-          className="chat-window-container"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          {/* Chat Header */}
-          <div className="chat-header">
-            <div className="chat-header-profile">
-              <div className="chat-avatar">K</div>
-              <div className="chat-info">
-                <h3>Kavin Kumar</h3>
-                <span className="status">
-                  <span className="status-dot"></span> Online
-                </span>
+        <dl className="lf-meta">
+          <div>
+            <dt>Email</dt>
+            <dd><a href={`mailto:${EMAIL}`}>{EMAIL}</a></dd>
+          </div>
+          <div>
+            <dt>Elsewhere</dt>
+            <dd className="lf-meta-links">
+              <a href="https://www.linkedin.com/in/ckavinkumar/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+              <a href="https://github.com/kavinkumar1603" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              <a href="https://x.com/KavinKumar_16" target="_blank" rel="noopener noreferrer">X ↗</a>
+            </dd>
+          </div>
+        </dl>
+      </header>
+
+      <motion.div
+        className="lf-card"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-10%' }}
+        transition={{ duration: 1, ease, delay: 0.1 }}
+      >
+        <div className="lf-card-bar" aria-hidden="true">
+          <span>New message</span>
+          <span>To: Kavin Kumar</span>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {status === 'sent' ? (
+            <motion.div
+              key="sent"
+              className="lf-done"
+              role="status"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease }}
+            >
+              <span className="lf-done-mark" aria-hidden="true">✓</span>
+              <p className="lf-sentence">
+                Thanks, <em>{form.name.split(' ')[0] || 'friend'}</em>. Your note is on its way —
+                I&apos;ll reply to <em>{form.email}</em> soon.
+              </p>
+              <button type="button" className="pill" onClick={reset}>Write another</button>
+            </motion.div>
+          ) : (
+            <motion.form
+              key="form"
+              className="lf-form"
+              onSubmit={onSubmit}
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
+            >
+              {/* honeypot — hidden from people, tempting to bots */}
+              <input type="text" name="_honey" tabIndex={-1} autoComplete="off" className="lf-honey" aria-hidden="true" />
+
+              <p className="lf-sentence">
+                Hi Kavin, I&apos;m{' '}
+                <Blank name="name" label="Your name" placeholder="your name" value={form.name} onChange={update} required autoComplete="name" />
+                {' '}from{' '}
+                <Blank name="company" label="Company or organisation (optional)" placeholder="company (optional)" value={form.company} onChange={update} autoComplete="organization" />
+                , reaching out about
+              </p>
+
+              <fieldset className="lf-topics">
+                <legend className="sr-only">Topic</legend>
+                {topics.map((t) => (
+                  <label key={t} className={`lf-topic${topic === t ? ' is-on' : ''}`}>
+                    <input
+                      type="radio"
+                      name="topic"
+                      value={t}
+                      checked={topic === t}
+                      onChange={() => setTopic(t)}
+                    />
+                    {t}
+                  </label>
+                ))}
+              </fieldset>
+
+              <p className="lf-sentence">
+                You can reach me at{' '}
+                <Blank name="email" type="email" label="Your email" placeholder="you@email.com" value={form.email} onChange={update} required autoComplete="email" />
+                .
+              </p>
+
+              <div className="lf-brief">
+                <label htmlFor="lf-message" className="lf-brief-label">The details</label>
+                <textarea
+                  id="lf-message"
+                  name="message"
+                  rows={4}
+                  required
+                  minLength={10}
+                  value={form.message}
+                  onChange={update}
+                  placeholder="A few lines about the role, project or idea — timelines and links welcome."
+                  suppressHydrationWarning
+                />
               </div>
-            </div>
-            <div className="chat-actions">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" />
-              </svg>
-            </div>
-          </div>
 
-          {/* Chat History */}
-          <div className="chat-history">
-            <AnimatePresence initial={false}>
-              {messages.map((msg) => (
-                <motion.div 
-                  key={msg.id}
-                  className={`chat-bubble-wrapper ${msg.sender}`}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className={`chat-bubble ${msg.sender}`}>
-                    <p>{msg.text}</p>
-                  </div>
-                  <span className="chat-time">{msg.time}</span>
-                </motion.div>
-              ))}
-
-              {isTyping && (
-                <motion.div 
-                  className="chat-bubble-wrapper bot"
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="chat-bubble bot typing-indicator">
-                    <span></span><span></span><span></span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <div ref={chatEndRef} />
-          </div>
-
-          {/* Chat Input */}
-          <div className="chat-input-area">
-            <form onSubmit={handleSubmit} className="chat-form">
-              <input
-                type={step === 1 ? "email" : "text"}
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder={step >= 2 ? "Chat ended." : step === 1 ? "Your email address..." : "Type a message..."}
-                disabled={step >= 2 || isTyping}
-                className="chat-input"
-                suppressHydrationWarning={true}
-              />
-              <button 
-                type="submit" 
-                className="chat-send-btn" 
-                disabled={!inputValue.trim() || step >= 2 || isTyping}
-                suppressHydrationWarning={true}
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
-              </button>
-            </form>
-          </div>
-
-        </motion.div>
-
-      </div>
+              <div className="lf-actions">
+                <p className="lf-note" aria-live="polite">
+                  {status === 'error' ? (
+                    <span className="lf-error">
+                      That didn&apos;t send. Please try again, or email me directly at{' '}
+                      <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.
+                    </span>
+                  ) : (
+                    'All fields except company are required.'
+                  )}
+                </p>
+                <button type="submit" className="lf-send" disabled={status === 'sending'} data-cursor="Send" suppressHydrationWarning>
+                  <span className="lf-send-label">{status === 'sending' ? 'Sending…' : 'Send message'}</span>
+                  <span className="lf-send-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </motion.form>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </section>
   );
 }

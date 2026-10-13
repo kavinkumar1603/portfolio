@@ -1,96 +1,129 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import './HeroSection.css';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
+import { PRELOADER_DONE } from './Preloader';
 
-const roles = [
-  'Full Stack Developer',
-  'React & Next.js Engineer',
-  'UI / UX Enthusiast',
-  'Problem Solver',
-];
+const name = ['Kavin', 'Kumar'];
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+const letter: Variants = {
+  hidden: { y: '105%' },
+  show: (i: number) => ({ y: '0%', transition: { duration: 1.1, ease, delay: 0.15 + 0.045 * i } }),
+};
+
+const fade: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 0.9, ease, delay: 0.7 + 0.12 * i } }),
+};
+
+function subscribePreloaded(cb: () => void) {
+  window.addEventListener(PRELOADER_DONE, cb);
+  return () => window.removeEventListener(PRELOADER_DONE, cb);
+}
+
+function usePreloaded() {
+  return useSyncExternalStore(
+    subscribePreloaded,
+    () => !!(window as typeof window & { __preloaded?: boolean }).__preloaded,
+    () => false,
+  );
+}
+
+function useIndiaTime() {
+  const [time, setTime] = useState('');
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat('en-GB', {
+      hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata',
+    });
+    const tick = () => setTime(fmt.format(new Date()));
+    tick();
+    const id = setInterval(tick, 15000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+function scrollToId(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const win = window as typeof window & { lenis?: { scrollTo: (el: HTMLElement) => void } };
+  if (win.lenis) win.lenis.scrollTo(el);
+  else el.scrollIntoView({ behavior: 'smooth' });
+}
 
 export default function HeroSection() {
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayed, setDisplayed] = useState('');
-  const [deleting, setDeleting] = useState(false);
+  const ready = usePreloaded();
+  const time = useIndiaTime();
 
-  // Parallax Scroll Hooks
   const { scrollY } = useScroll();
-  const textScale = useTransform(scrollY, [0, 600], [1, 1.2]);
-  const textOpacity = useTransform(scrollY, [0, 500], [1, 0]);
-  const gridY = useTransform(scrollY, [0, 800], [0, 250]);
+  const nameY = useTransform(scrollY, [0, 700], [0, 120]);
+  const fadeOut = useTransform(scrollY, [0, 500], [1, 0]);
 
-  useEffect(() => {
-    const current = roles[roleIndex];
-    let t: NodeJS.Timeout;
-
-    if (!deleting && displayed.length < current.length) {
-      t = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 75);
-    } else if (!deleting && displayed.length === current.length) {
-      t = setTimeout(() => setDeleting(true), 2200);
-    } else if (deleting && displayed.length > 0) {
-      t = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 38);
-    } else {
-      setDeleting(false);
-      setRoleIndex(i => (i + 1) % roles.length);
-    }
-
-    return () => clearTimeout(t);
-  }, [displayed, deleting, roleIndex]);
-
-  const scrollDown = () => {
-    const win = window as typeof window & { lenis?: { scrollTo: (t: number) => void } };
-    const bottom = document.documentElement.scrollHeight - window.innerHeight;
-    if (win.lenis) win.lenis.scrollTo(bottom);
-    else window.scrollTo({ top: bottom, behavior: 'smooth' });
-  };
+  let n = 0;
 
   return (
-    <section id="hero" className="hero-section">
-
-      <motion.div 
-        className="hero-grid" 
-        aria-hidden="true" 
-        style={{ y: gridY }}
-      />
-
-      <motion.div 
-        className="hero-center"
-        style={{ scale: textScale, opacity: textOpacity }}
+    <section
+      id="hero"
+      className="hero"
+      data-shape="orb"
+      data-shape-x="0.5"
+      data-shape-opacity="0.35"
+    >
+      <motion.div
+        className="hero-inner"
+        initial="hidden"
+        animate={ready ? 'show' : 'hidden'}
+        style={{ opacity: fadeOut }}
       >
-
-        {/* Name — static gradient, no animation */}
-        <h1 className="hero-name">Kavin Kumar</h1>
-
-        {/* Typewriter role */}
-        <div className="hero-role-wrap">
-          <span className="hero-role-text">{displayed}</span>
-          <span className="hero-cursor" />
+        <div className="hero-top">
+          <motion.span className="hero-tag" variants={fade} custom={0}>
+            <span className="hero-dot" aria-hidden="true" /> Available for work
+          </motion.span>
+          <motion.span className="hero-tag" variants={fade} custom={0}>
+            India — {time || '--:--'} IST
+          </motion.span>
         </div>
 
-        {/* Bio */}
-        <p className="hero-bio">
-          I build clean, scalable web applications — from pixel-perfect interfaces
-          to robust back-end systems.
-        </p>
+        <div className="hero-mid">
+          <motion.p className="hero-statement" variants={fade} custom={1}>
+            Full stack developer building clean, scalable web apps
+            — <em>from pixel to production.</em>
+          </motion.p>
 
+          <motion.button
+            type="button"
+            className="hero-cta"
+            onClick={() => scrollToId('projects')}
+            variants={fade}
+            custom={2}
+            data-cursor="Work"
+            suppressHydrationWarning
+          >
+            <span>Selected work</span>
+            <span className="hero-cta-arrow" aria-hidden="true">↓</span>
+          </motion.button>
+        </div>
+
+        <motion.h1 className="hero-name" style={{ y: nameY }} aria-label="Kavin Kumar">
+          {name.map((word, w) => (
+            <span key={word} className={`hero-word${w === 1 ? ' hero-word--alt' : ''}`} aria-hidden="true">
+              {word.split('').map((ch) => {
+                const i = n++;
+                return (
+                  <span key={i} className="hero-letter-mask">
+                    <motion.span className="hero-letter" variants={letter} custom={i}>
+                      {ch}
+                    </motion.span>
+                  </span>
+                );
+              })}
+            </span>
+          ))}
+        </motion.h1>
       </motion.div>
-
-      {/* Scroll hint — pinned to bottom */}
-      <button
-        type="button"
-        className="scroll-hint"
-        onClick={scrollDown}
-        aria-label="Scroll down"
-        suppressHydrationWarning={true}
-      >
-        <div className="scroll-mouse">
-          <div className="scroll-wheel" />
-        </div>
-        <span>Scroll</span>
-      </button>
-
     </section>
   );
 }

@@ -24,87 +24,58 @@ const educationData = [
   },
 ];
 
+const ease = [0.22, 1, 0.36, 1] as const;
+
 export default function EducationSection() {
   return (
-    <section id="education" className="edu-timeline-section">
-      <div className="edu-inner">
-        {/* Header */}
-        <motion.div
-          className="edu-header"
-          initial={{ opacity: 0, y: 20 }}
+    <section
+      id="education"
+      className="edu section"
+      data-shape="galaxy"
+      data-shape-opacity="0.65"
+      data-shape-scale="1.2"
+    >
+      <header className="section-head">
+        <span className="section-label">(05) — Education</span>
+        <motion.h2
+          className="section-title"
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease }}
         >
-          <span className="edu-super">Academic Journey</span>
-          <h2 className="edu-title">Education</h2>
-        </motion.div>
+          The <em>foundation</em>
+        </motion.h2>
+      </header>
 
-        {/* The Timeline Container */}
-        <div className="edu-timeline">
-          {/* The vertical tracking line draws downwards */}
-          <motion.div 
-            className="edu-timeline-track"
-            initial={{ scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 1.5, ease: [0.25, 1, 0.5, 1] }}
-            style={{ transformOrigin: 'top' }}
-          />
-
-          {educationData.map((item, index) => (
-            <motion.div
-              key={item.id}
-              className="edu-timeline-item"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-100px' }}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: { staggerChildren: 0.2, delayChildren: 0.1 }
-                }
-              }}
-            >
-              {/* The glowing node pops in */}
-              <motion.div 
-                className="edu-timeline-node"
-                variants={{
-                  hidden: { scale: 0, opacity: 0 },
-                  visible: { scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 400, damping: 25 } }
-                }}
-              >
-                <div className="edu-timeline-node-inner" />
-              </motion.div>
-
-              {/* The content card slides in elegantly */}
-              <motion.div 
-                className="edu-timeline-content"
-                variants={{
-                  hidden: { opacity: 0, x: 40 },
-                  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
-                }}
-              >
-                <div className="edu-item-header">
-                  <span className="edu-year">{item.year}</span>
-                  <h3 className="edu-degree">{item.degree}</h3>
-                  <h4 className="edu-inst">{item.institution}</h4>
-                </div>
-                
-                <p className="edu-desc">{item.description}</p>
-                
-                <div className="edu-tags">
-                  {item.skills.map((skill) => (
-                    <span key={skill} className="edu-tag">
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
+      <div className="edu-track">
+        <motion.div
+          className="edu-line"
+          aria-hidden="true"
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.6, ease }}
+        />
+        {educationData.map((item, i) => (
+          <motion.article
+            key={item.id}
+            className="edu-card"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 1, ease, delay: 0.2 + i * 0.15 }}
+          >
+            <span className={`edu-node${i === 0 ? ' is-current' : ''}`} aria-hidden="true" />
+            <p className="edu-year">{item.year}</p>
+            <h3 className="edu-degree">{item.degree}</h3>
+            <p className="edu-inst"><em>{item.institution}</em></p>
+            <p className="edu-desc">{item.description}</p>
+            <ul className="edu-tags">
+              {item.skills.map((s) => <li key={s}>{s}</li>)}
+            </ul>
+          </motion.article>
+        ))}
       </div>
     </section>
   );

@@ -1,221 +1,111 @@
 /* ================================================
-   CODING PROFILES SECTION — Spotlight Focus Grid
+   PRACTICE — big counting numbers over a data terrain
    ================================================ */
 
-.cp-spotlight-section {
-  padding: 120px 0;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.cp-spotlight-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 40px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Header */
-.cp-header {
-  margin-bottom: 80px;
-  text-align: center;
-}
-
-.cp-super {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--text-3);
-  margin-bottom: 12px;
-}
-
-.cp-title {
-  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
-  font-size: clamp(2.8rem, 5vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -2px;
-  color: var(--text-1);
-}
-
-/* ── Grid Container ── */
-.cp-cards-grid {
+.cp-grid {
+  margin-top: clamp(48px, 7vw, 96px);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  /* The group hover handles the dimming effect */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
 }
 
-/* ── Spotlight Card Base ── */
-.cp-spotlight-card {
+.cp-card {
   position: relative;
-  aspect-ratio: 2 / 3;
-  border-radius: 20px;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.02);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease, opacity 0.4s ease;
-  overflow: hidden;
-}
-
-/* ── Focus / Blur Animation (Group Effect) ── */
-.cp-spotlight-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  z-index: 10;
-}
-
-/* When a sibling is hovered, dim this card */
-.cp-spotlight-card.dimmed {
-  filter: blur(4px) brightness(0.6);
-  opacity: 0.6;
-  transform: scale(0.98);
-}
-
-/* ── The Spotlight Border Effect ── */
-.cp-card-border {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  padding: 1px; /* The width of the border */
-  /* The spotlight gradient that follows the mouse via CSS variables */
-  background: radial-gradient(
-    800px circle at var(--mouse-x) var(--mouse-y),
-    rgba(255, 255, 255, 0.2),
-    transparent 40%
-  );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.cp-cards-grid:hover .cp-card-border {
-  opacity: 1; /* Fade in the border glow when mouse enters the grid */
-}
-
-/* ── Inner Content ── */
-.cp-card-content {
-  position: absolute;
-  inset: 1px; /* Stay inside the 1px spotlight border */
-  border-radius: 19px;
-  background: rgba(10, 10, 10, 0.9); /* Dark base */
-  padding: 32px 24px;
   display: flex;
   flex-direction: column;
-  z-index: 1;
+  padding: 26px 24px 28px;
+  min-height: 340px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-1);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--bg) 50%, transparent);
+  overflow: hidden;
+  isolation: isolate;
 }
 
-/* Background Spotlight Inner Glow */
-.cp-card-content::before {
+/* accent fill rises from the bottom on hover */
+.cp-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 19px;
-  background: radial-gradient(
-    800px circle at var(--mouse-x) var(--mouse-y),
-    rgba(255, 255, 255, 0.04),
-    transparent 40%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
+  background: var(--accent);
+  transform: translateY(101%);
+  transition: transform 0.7s var(--ease-out);
+  z-index: -1;
 }
 
-.cp-cards-grid:hover .cp-card-content::before {
-  opacity: 1;
-}
+.cp-card:hover::before { transform: translateY(0); }
+.cp-card:hover,
+.cp-card:hover .cp-big-label,
+.cp-card:hover dt,
+.cp-card:hover dd,
+.cp-card:hover .cp-arrow { color: #0b0b0b; }
 
-/* Text & Stats */
-.cp-card-title {
-  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -1px;
-  color: var(--text-1);
-  margin-bottom: 4px;
-}
-
-.cp-card-user {
-  font-family: 'Consolas', 'Courier New', monospace;
-  font-size: 0.85rem;
-  color: var(--text-3);
-  margin-bottom: auto;
-}
-
-.cp-card-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 24px;
-}
-
-.cp-stat-row {
+.cp-card-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
 }
 
-.cp-stat-label {
-  font-size: 0.85rem;
+.cp-card-top h3 {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.cp-arrow {
+  color: var(--accent);
+  transition: transform 0.4s var(--ease-out), color 0.3s;
+}
+
+.cp-card:hover .cp-arrow { transform: translate(3px, -3px); }
+
+.cp-big {
+  margin-top: auto;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(3.6rem, 6.5vw, 6.5rem);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.cp-big-label {
+  margin-top: 8px;
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: color 0.3s;
 }
 
-.cp-stat-value {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-1);
+.cp-stats {
+  margin-top: 22px;
+  display: grid;
+  gap: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
 }
 
-.cp-card-footer {
+.cp-stats > div {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  color: var(--text-2);
+  gap: 12px;
   font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 24px;
-  transition: color 0.3s ease;
 }
 
-.cp-spotlight-card:hover .cp-card-footer {
-  color: var(--text-1);
+.cp-stats dt { color: var(--text-3); transition: color 0.3s; }
+.cp-stats dd { color: var(--text-1); transition: color 0.3s; }
+
+@media (max-width: 1100px) {
+  .cp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.cp-card-footer svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* ── Responsive Layout ── */
-@media (max-width: 1200px) {
-  .cp-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 800px;
-    margin: 0 auto;
-  }
-}
-
-@media (max-width: 600px) {
-  .cp-spotlight-inner { padding: 0 20px; }
-  
-  .cp-cards-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .cp-spotlight-card {
-    aspect-ratio: auto;
-    height: 400px;
-  }
+@media (max-width: 560px) {
+  .cp-grid { grid-template-columns: 1fr; }
+  .cp-card { min-height: 260px; }
 }

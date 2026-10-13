@@ -2,55 +2,83 @@
 
 import { useEffect, useState } from 'react';
 
+const links = [
+  { id: 'projects', label: 'Work' },
+  { id: 'internships', label: 'Experience' },
+  { id: 'stack', label: 'Stack' },
+  { id: 'contact', label: 'Contact' },
+];
+
+function useLocalTime() {
+  const [time, setTime] = useState('');
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Asia/Kolkata',
+    });
+    const update = () => setTime(fmt.format(new Date()));
+    update();
+    const id = setInterval(update, 30_000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [progress, setProgress] = useState(0);
+  const time = useLocalTime();
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      setScrolled(scrollY > 50);
-      setProgress((scrollY / docHeight) * 100);
+      setProgress(docHeight > 0 ? window.scrollY / docHeight : 0);
     };
-
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
-    if (el) {
-      const win = window as typeof window & { lenis?: { scrollTo: (el: HTMLElement, opts: object) => void } };
-      if (win.lenis) {
-        win.lenis.scrollTo(el, { offset: -80 });
-      } else {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
+    if (!el) return;
+    const win = window as typeof window & { lenis?: { scrollTo: (el: HTMLElement, opts: object) => void } };
+    if (win.lenis) win.lenis.scrollTo(el, { offset: 0 });
+    else el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
-      <div className="scroll-progress" style={{ width: `${progress}%` }} />
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-        <div className="nav-container">
-          <a href="#hero" className="nav-logo" onClick={e => { e.preventDefault(); scrollTo('hero'); }}>
-            KK.
-          </a>
+      <div className="scroll-progress" style={{ transform: `scaleX(${progress})` }} />
+      <header className="navbar">
+        <a
+          href="#hero"
+          className="nav-logo"
+          onClick={(e) => { e.preventDefault(); scrollTo('hero'); }}
+        >
+          Kavin Kumar<sup>©</sup>
+        </a>
+
+        <p className="nav-meta" suppressHydrationWarning>
+          {/* TODO: set your city */}
+          India — {time || '--:--'} IST
+        </p>
+
+        <nav aria-label="Primary">
           <ul className="nav-links">
-            <li>
-              <a
-                href="#contact"
-                className="nav-cta"
-                onClick={e => { e.preventDefault(); scrollTo('contact'); }}
-              >
-                Hire Me
-              </a>
-            </li>
+            {links.map((l) => (
+              <li key={l.id}>
+                <a
+                  href={`#${l.id}`}
+                  onClick={(e) => { e.preventDefault(); scrollTo(l.id); }}
+                >
+                  <span className="nav-link-roll" data-text={l.label}>{l.label}</span>
+                </a>
+              </li>
+            ))}
           </ul>
-        </div>
-      </nav>
+        </nav>
+      </header>
     </>
   );
 }

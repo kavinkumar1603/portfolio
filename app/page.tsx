@@ -12,23 +12,26 @@ export default function Home() {
     <>
       <main>
         <HeroSection />
+        <ProjectsSection />
+        <InternshipsSection />
         <TechStack />
         <CertificationsSection />
-        <InternshipsSection />
-        <ProjectsSection />
         <EducationSection />
         <CodingProfilesSection />
         <ContactSection />
       </main>
 
-      <footer className="footer">
-        <div className="footer-glow"></div>
+      <footer className="footer" data-shape="dust" data-shape-opacity="0.6">
+        <h2>
+          <a href="#contact" className="footer-cta">
+            Let&apos;s build something <em>together</em>&nbsp;&nbsp;&rarr;
+          </a>
+        </h2>
+
         <div className="footer-inner">
-          <div className="footer-brand">
-            <p className="footer-copy">
-              © {new Date().getFullYear()} Kavin Kumar. All rights reserved.
-            </p>
-          </div>
+          <p className="footer-copy">
+            &copy; {new Date().getFullYear()} Kavin Kumar. All rights reserved.
+          </p>
           <div className="footer-links">
             <a href="https://github.com/kavinkumar1603" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -49,6 +52,8 @@ export default function Home() {
             </a>
           </div>
         </div>
+
+        <div className="footer-wordmark" aria-hidden="true">Kavin Kumar</div>
       </footer>
     </>
   );

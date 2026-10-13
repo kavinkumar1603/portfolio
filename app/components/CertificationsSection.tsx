@@ -1,8 +1,10 @@
 'use client';
 
 import './CertificationsSection.css';
-import { useEffect, useRef } from 'react';
+import { useState, type MouseEvent } from 'react';
+import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motion';
 
+// Images are the real issued certificates
 const certifications = [
   {
     id: 'dsa',
@@ -62,64 +64,97 @@ const certifications = [
   }
 ];
 
-export default function CertificationsSection() {
-  const sectionRef = useRef<HTMLElement>(null);
+const ease = [0.22, 1, 0.36, 1] as const;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.querySelectorAll('.reveal').forEach(el => {
-              el.classList.add('visible');
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, []);
+export default function CertificationsSection() {
+  const [hovered, setHovered] = useState<number | null>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 220, damping: 26 });
+  const sy = useSpring(y, { stiffness: 220, damping: 26 });
+
+  const onMove = (e: MouseEvent<HTMLElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    x.set(e.clientX - r.left);
+    y.set(e.clientY - r.top);
+  };
 
   return (
-    <section id="certifications" className="cert-section" ref={sectionRef}>
-      <div className="cert-header reveal">
-        <span className="cert-super">Achievements</span>
-        <h2 className="cert-title-text">Certifications</h2>
-      </div>
+    <section
+      id="certifications"
+      className="cert section"
+      data-shape="lattice"
+      data-shape-x="0.6"
+      data-shape-opacity="0.38"
+    >
+      <header className="section-head">
+        <span className="section-label">(04) — Certifications</span>
+        <motion.h2
+          className="section-title"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease }}
+        >
+          Always <em>learning</em>
+        </motion.h2>
+      </header>
 
-      <div className="cert-accordion reveal reveal-delay-1">
-        {certifications.map((cert) => (
-          <a
-            key={cert.id}
-            href={cert.link}
-            target="_blank"
-            rel="noreferrer"
-            className="cert-card"
-          >
-            {/* Background Image ALWAYS visible */}
-            <div className="cert-bg">
+      <div className="cert-table" onMouseMove={onMove} onMouseLeave={() => setHovered(null)}>
+        <div className="cert-row cert-row--head" aria-hidden="true">
+          <span>No.</span><span>Course</span><span>Issuer</span><span>Date</span><span />
+        </div>
+
+        <ul>
+          {certifications.map((c, i) => {
+            const hasLink = c.link !== '#';
+            const content = (
+              <>
+                <span className="cert-num">{String(i + 1).padStart(2, '0')}</span>
+                <span className="cert-name">{c.name}</span>
+                <span className="cert-provider">{c.provider}</span>
+                <span className="cert-date">{c.date}</span>
+                <span className="cert-arrow" aria-hidden="true">{hasLink ? '↗' : ''}</span>
+              </>
+            );
+            return (
+              <motion.li
+                key={c.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-5%' }}
+                transition={{ duration: 0.7, ease, delay: i * 0.05 }}
+                onMouseEnter={() => setHovered(i)}
+              >
+                {hasLink ? (
+                  <a className="cert-row" href={c.link} target="_blank" rel="noreferrer" data-cursor="View">
+                    {content}
+                  </a>
+                ) : (
+                  <div className="cert-row">{content}</div>
+                )}
+              </motion.li>
+            );
+          })}
+        </ul>
+
+        {/* Floating preview of the real certificate */}
+        <AnimatePresence>
+          {hovered !== null && (
+            <motion.div
+              className="cert-preview"
+              style={{ x: sx, y: sy }}
+              initial={{ opacity: 0, scale: 0.85, rotate: -4 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.35, ease }}
+              aria-hidden="true"
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={cert.image} alt={cert.name} className="cert-img" />
-              <div className="cert-overlay"></div>
-            </div>
-
-            {/* Collapsed State: Vertical Text */}
-            <div className="cert-collapsed-content">
-              <span className="cert-vertical-title">{cert.provider}</span>
-            </div>
-
-            {/* Expanded State: Horizontal Info (Fades in on hover) */}
-            <div className="cert-expanded-content">
-              <div className="cert-meta">
-                <span className="cert-provider">{cert.provider}</span>
-                <span className="cert-date">{cert.date}</span>
-              </div>
-              <h3 className="cert-name">{cert.name}</h3>
-            </div>
-          </a>
-        ))}
+              <img key={hovered} src={certifications[hovered].image} alt="" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );

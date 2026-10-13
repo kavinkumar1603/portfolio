@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "./components/LenisProvider";
+import Preloader from "./components/Preloader";
+import Cursor from "./components/Cursor";
+import Navbar from "./components/Navbar";
+import Scene3D from "./components/Scene3D";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -9,8 +13,25 @@ const inter = Inter({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+// Display face — tight grotesk for big headings (same family Awwwards uses)
+const interTight = Inter_Tight({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Editorial accent — italic serif mixed into sans headings (Immersive Garden style)
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Small uppercase labels, counters, metadata (Lusion style)
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -34,8 +55,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${interTight.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
+    >
       <body>
+        <Preloader />
+        <Scene3D />
+        <Cursor />
+        <Navbar />
         <LenisProvider>
           {children}
         </LenisProvider>

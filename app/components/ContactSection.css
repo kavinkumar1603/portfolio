@@ -1,306 +1,314 @@
 /* ================================================
-   CONTACT SECTION — Live Chat Messenger
+   CONTACT — a "letter" form: the visitor completes
+   one sentence inline, then adds the details
    ================================================ */
 
-.chat-contact-section {
-  padding: 120px 0;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  position: relative;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.chat-contact-inner {
-  max-width: 800px; /* Chat windows shouldn't be too wide */
-  margin: 0 auto;
-  padding: 0 40px;
-  position: relative;
-  z-index: 1;
+.lf-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 32px;
 }
 
-/* Header */
-.contact-header {
-  margin-bottom: 60px;
-  text-align: center;
+.lf-meta {
+  display: grid;
+  gap: 18px;
+  min-width: 260px;
+  padding-bottom: 0.6em;
 }
 
-.contact-super {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 4px;
+.lf-meta dt {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 12px;
 }
 
-.contact-title {
-  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
-  font-size: clamp(2.8rem, 5vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -2px;
+.lf-meta dd { margin-top: 6px; }
+
+.lf-meta a {
   color: var(--text-1);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.5s var(--ease-out), color 0.3s;
 }
 
-/* ── The Chat Window ── */
-.chat-window-container {
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 24px;
+.lf-meta a:hover { color: var(--accent); background-size: 100% 1px; }
+
+.lf-meta-links { display: flex; gap: 18px; flex-wrap: wrap; }
+
+/* ── The letter ── */
+.lf-card {
+  position: relative;
+  margin-top: clamp(48px, 7vw, 96px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--bg-card) 72%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 50px 100px -30px rgba(0, 0, 0, 0.8);
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  height: 600px; /* Fixed height for the chat interface */
 }
 
-/* Chat Header */
-.chat-header {
+.lf-card-bar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.chat-header-profile {
-  display: flex;
-  align-items: center;
   gap: 16px;
-}
-
-.chat-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--text-1);
-  color: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-space-grotesk), 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  font-size: 1.2rem;
-}
-
-.chat-info h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-1);
-  margin-bottom: 4px;
-}
-
-.chat-info .status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
+  padding: 16px clamp(22px, 4vw, 56px);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-3);
 }
 
-.status-dot {
-  width: 8px;
-  height: 8px;
-  background: #2ec866;
-  border-radius: 50%;
-  box-shadow: 0 0 8px #2ec866;
+.lf-form,
+.lf-done {
+  padding: clamp(28px, 5vw, 64px) clamp(22px, 4vw, 56px);
 }
 
-.chat-actions svg {
-  width: 24px;
-  height: 24px;
-  color: var(--text-3);
-  cursor: pointer;
-  transition: color 0.3s ease;
+.lf-sentence {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.6rem, 3.4vw, 3.1rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.35;
+  color: var(--text-2);
 }
 
-.chat-actions svg:hover {
+.lf-sentence + .lf-sentence,
+.lf-topics + .lf-sentence { margin-top: 0.4em; }
+
+.lf-sentence em {
+  font-family: var(--font-serif), serif;
   color: var(--text-1);
 }
 
-
-/* ── Chat History Area ── */
-.chat-history {
-  flex: 1;
-  padding: 24px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  
-  /* Scrollbar styling */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+/* Inline blanks */
+.lf-blank {
+  display: inline-grid;
+  vertical-align: baseline;
+  max-width: 100%;
 }
 
-.chat-history::-webkit-scrollbar {
-  width: 6px;
+.lf-blank-mirror,
+.lf-blank input { grid-area: 1 / 1; }
+
+.lf-blank-mirror {
+  visibility: hidden;
+  white-space: pre;
+  padding: 0 0.35em 0.04em 0.1em;
+  overflow: hidden;
 }
 
-.chat-history::-webkit-scrollbar-track {
+.lf-blank.is-empty .lf-blank-mirror {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+}
+
+.lf-blank input {
+  width: 100%;
+  min-width: 0;
+  padding: 0 0.1em 0.04em;
+  border: 0;
+  border-bottom: 1px solid var(--border-hl);
   background: transparent;
-}
-
-.chat-history::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-}
-
-/* Chat Bubbles */
-.chat-bubble-wrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 80%;
-}
-
-.chat-bubble-wrapper.bot {
-  align-self: flex-start;
-  align-items: flex-start;
-}
-
-.chat-bubble-wrapper.user {
-  align-self: flex-end;
-  align-items: flex-end;
-}
-
-.chat-bubble {
-  padding: 14px 20px;
-  border-radius: 20px;
-  font-size: 1.05rem;
-  line-height: 1.5;
-}
-
-.chat-bubble.bot {
-  background: rgba(255, 255, 255, 0.05);
+  font: inherit;
+  letter-spacing: inherit;
   color: var(--text-1);
-  border-bottom-left-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.chat-bubble.user {
-  background: var(--text-1);
-  color: var(--bg);
-  border-bottom-right-radius: 4px;
-}
-
-.chat-time {
-  font-size: 0.75rem;
-  color: var(--text-3);
-  margin-top: 6px;
-  padding: 0 4px;
-}
-
-
-/* ── Typing Indicator ── */
-.typing-indicator {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 18px 24px !important;
-}
-
-.typing-indicator span {
-  width: 6px;
-  height: 6px;
-  background: var(--text-2);
-  border-radius: 50%;
-  animation: bounce 1.4s infinite ease-in-out both;
-}
-
-.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-
-@keyframes bounce {
-  0%, 80%, 100% { transform: scale(0); }
-  40% { transform: scale(1); }
-}
-
-
-/* ── Chat Input Area ── */
-.chat-input-area {
-  padding: 20px 24px;
-  background: rgba(255, 255, 255, 0.01);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.chat-form {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 100px;
-  padding: 8px 8px 8px 24px;
-  transition: border-color 0.3s ease;
-}
-
-.chat-form:focus-within {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.chat-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--text-1);
-  font-family: inherit;
-  font-size: 1rem;
   outline: none;
+  transition: border-color 0.3s;
 }
 
-.chat-input::placeholder {
+.lf-blank input::placeholder {
+  font-family: var(--font-serif), serif;
+  font-style: italic;
   color: var(--text-3);
 }
 
-.chat-input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.lf-blank input:focus { border-bottom-color: var(--accent); }
+
+.lf-blank input:user-invalid { border-bottom-color: #ff8a65; }
+
+/* Topic chips */
+.lf-topics {
+  border: 0;
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.chat-send-btn {
+.lf-topic {
+  position: relative;
+  padding: 11px 20px;
+  border: 1px solid var(--border-hl);
+  border-radius: 999px;
+  font-family: var(--font-serif), serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.35s, color 0.35s, border-color 0.35s;
+}
+
+.lf-topic input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.lf-topic:hover { color: var(--text-1); border-color: var(--text-2); }
+
+.lf-topic.is-on {
+  background: var(--text-1);
+  border-color: var(--text-1);
+  color: #0b0b0b;
+}
+
+.lf-topic:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Details */
+.lf-brief {
+  margin-top: clamp(28px, 4vw, 48px);
+  display: grid;
+  gap: 12px;
+}
+
+.lf-brief-label {
+  font-family: var(--font-mono), monospace;
+  font-size: var(--fs-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.lf-brief textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 18px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-hl);
+  background: transparent;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-1);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.lf-brief textarea::placeholder { color: var(--text-3); }
+.lf-brief textarea:focus { border-bottom-color: var(--accent); }
+
+/* Actions */
+.lf-actions {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.lf-note {
+  max-width: 52ch;
+  font-size: 0.9rem;
+  color: var(--text-3);
+}
+
+.lf-error { color: #ff8a65; }
+.lf-error a { color: var(--text-1); }
+
+.lf-send {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 8px 8px 28px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--text-1);
+  color: #0b0b0b;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ember fill sweeps in on hover */
+.lf-send::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: translateX(-101%);
+  transition: transform 0.6s var(--ease-out);
+  z-index: -1;
+}
+
+.lf-send:hover::before { transform: translateX(0); }
+
+.lf-send-icon {
+  display: grid;
+  place-items: center;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--text-1);
-  color: var(--bg);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  background: #0b0b0b;
+  color: var(--text-1);
+  transition: transform 0.5s var(--ease-out);
 }
 
-.chat-send-btn svg {
-  width: 20px;
-  height: 20px;
+.lf-send:hover .lf-send-icon { transform: rotate(-45deg); }
+
+.lf-send:disabled { opacity: 0.6; cursor: progress; }
+
+.lf-honey { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+/* Sent state */
+.lf-done {
+  display: grid;
+  justify-items: start;
+  gap: 28px;
+  min-height: 360px;
+  align-content: center;
 }
 
-.chat-send-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+.lf-done-mark {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #0b0b0b;
+  font-size: 1.6rem;
 }
 
-.chat-send-btn:not(:disabled):hover {
-  transform: scale(1.05);
-}
-
-
-/* ── Responsive Layout ── */
-@media (max-width: 600px) {
-  .chat-contact-inner { padding: 0 20px; }
-  
-  .chat-window-container {
-    height: 500px;
-  }
-  
-  .chat-bubble-wrapper {
-    max-width: 90%;
-  }
-  
-  .chat-avatar {
-    width: 40px;
-    height: 40px;
-  }
+@media (max-width: 860px) {
+  .lf-head { grid-template-columns: 1fr; }
+  .lf-card-bar span:last-child { display: none; }
+  .lf-actions { flex-direction: column-reverse; align-items: stretch; }
+  .lf-send { justify-content: space-between; }
 }
